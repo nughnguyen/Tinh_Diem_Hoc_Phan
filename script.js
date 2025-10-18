@@ -53,12 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
         componentsContainer.appendChild(row);
     };
 
-    createComponentRow('Bài Tập Về Nhà', 5, '', false);
-    createComponentRow('Chuyên Cần', 5, '', false);
-    createComponentRow('Kiểm Tra Giữa Kỳ', 15, '', false);
-    createComponentRow('Phát Biểu & Thảo Luận', 5, '', false);
-    createComponentRow('Thực Hành & Thực Tế', 15, '', false);
-    createComponentRow('Kiểm Tra Cuối Kỳ', 55, '', true);
+    createComponentRow('Chuyên Cần', '', '', false);
+    createComponentRow('Kiểm Tra Giữa Kỳ', '', '', false);
+    createComponentRow('Kiểm Tra Cuối Kỳ', '', '', true);
     updateTotalWeight();
 
     addComponentBtn.addEventListener('click', () => {
