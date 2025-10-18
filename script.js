@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <input type="number" class="form-input component-weight w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500" placeholder="%" min="0" max="100" step="1" value="${weight}">
             </div>
             <div class="col-span-2">
-                <input type="number" class="form-input component-score w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500" placeholder="Điểm" min="0" max="10" step="0.1" value="${score}">
+                <input type="number" class="form-input component-score w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500" placeholder="Điểm" min="0" max="100" step="0.5" value="${score}">
             </div>
             <div class="col-span-2 flex justify-center">
                 <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded-sm border-slate-300 focus:ring-blue-500 component-final" ${isFinal ? 'checked' : ''}>
@@ -146,28 +146,28 @@ document.addEventListener('DOMContentLoaded', function() {
             noteEl.className = 'text-center font-medium mt-4 text-sm';
         }
 
-        if (finalExamScore !== null && finalExamScore < 1.0) {
+        if (finalExamScore !== null && finalExamScore < 10.0) {
             isFailed = true;
-            note += (note ? '<br>' : '') + 'Nợ môn do điểm thi kết thúc học phần dưới 1.0';
-        } else if (finalScore < 4.0) {
+            note += (note ? '<br>' : '') + 'Nợ môn do điểm thi kết thúc học phần dưới 10.0';
+        } else if (finalScore < 40.0) {
             isFailed = true;
-            note += (note ? '<br>' : '') + 'Nợ môn do điểm tổng kết học phần dưới 4.0';
+            note += (note ? '<br>' : '') + 'Nợ môn do điểm tổng kết học phần dưới 40.0';
         }
         
         if (isFailed) {
-             noteEl.classList.add('text-red-600');
+            noteEl.classList.add('text-red-600');
         }
 
-        if (finalScore >= 9.5) { letterGrade = 'A+'; score4 = 4.0; classification = 'Giỏi'; } 
-        else if (finalScore >= 8.5) { letterGrade = 'A'; score4 = 4.0; classification = 'Giỏi'; } 
-        else if (finalScore >= 8.0) { letterGrade = 'A-'; score4 = 3.65; classification = 'Giỏi'; } 
-        else if (finalScore >= 7.5) { letterGrade = 'B+'; score4 = 3.33; classification = 'Khá'; } 
-        else if (finalScore >= 7.0) { letterGrade = 'B'; score4 = 3.0; classification = 'Khá'; } 
-        else if (finalScore >= 6.5) { letterGrade = 'B-'; score4 = 2.65; classification = 'Khá'; } 
-        else if (finalScore >= 6.0) { letterGrade = 'C+'; score4 = 2.33; classification = 'Trung bình'; } 
-        else if (finalScore >= 5.5) { letterGrade = 'C'; score4 = 2.0; classification = 'Trung bình'; } 
-        else if (finalScore >= 4.5) { letterGrade = 'C-'; score4 = 1.65; classification = 'Trung bình yếu'; } 
-        else if (finalScore >= 4.0) { letterGrade = 'D'; score4 = 1.0; classification = 'Trung bình yếu'; } 
+        if (finalScore >= 95) { letterGrade = 'A+'; score4 = 4.0; classification = 'Giỏi'; } 
+        else if (finalScore >= 85) { letterGrade = 'A'; score4 = 4.0; classification = 'Giỏi'; } 
+        else if (finalScore >= 80) { letterGrade = 'A-'; score4 = 3.65; classification = 'Giỏi'; } 
+        else if (finalScore >= 75) { letterGrade = 'B+'; score4 = 3.33; classification = 'Khá'; } 
+        else if (finalScore >= 70) { letterGrade = 'B'; score4 = 3.0; classification = 'Khá'; } 
+        else if (finalScore >= 65) { letterGrade = 'B-'; score4 = 2.65; classification = 'Khá'; } 
+        else if (finalScore >= 60) { letterGrade = 'C+'; score4 = 2.33; classification = 'Trung bình'; } 
+        else if (finalScore >= 55) { letterGrade = 'C'; score4 = 2.0; classification = 'Trung bình'; } 
+        else if (finalScore >= 45) { letterGrade = 'C-'; score4 = 1.65; classification = 'Trung bình yếu'; } 
+        else if (finalScore >= 40) { letterGrade = 'D'; score4 = 1.0; classification = 'Trung bình yếu'; } 
         else { letterGrade = 'F'; score4 = 0.0; classification = 'Kém'; }
         
         if (isFailed) {
