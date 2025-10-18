@@ -193,3 +193,47 @@ document.addEventListener('DOMContentLoaded', function() {
         resultDiv.classList.remove('hidden');
     });
 });
+// Chờ cho toàn bộ nội dung trang được tải xong
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Lấy các element cần thiết
+    const themeToggleBtn = document.getElementById('dark-mode-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+    // Kiểm tra và đặt trạng thái icon ban đầu dựa trên localStorage hoặc cài đặt hệ thống
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        themeToggleLightIcon.classList.remove('hidden');
+    } else {
+        themeToggleDarkIcon.classList.remove('hidden');
+    }
+
+    // Lắng nghe sự kiện click trên nút bấm
+    themeToggleBtn.addEventListener('click', function() {
+        // Đảo ngược trạng thái của icon
+        themeToggleDarkIcon.classList.toggle('hidden');
+        themeToggleLightIcon.classList.toggle('hidden');
+
+        // Nếu theme đã được lưu trong localStorage, thực hiện thay đổi
+        if (localStorage.getItem('color-theme')) {
+            if (localStorage.getItem('color-theme') === 'light') {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            }
+        // Nếu chưa có, kiểm tra class 'dark' trên <html> và lưu lại
+        } else {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        }
+    });
+
+
+});

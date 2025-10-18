@@ -11,128 +11,158 @@
     <link rel="stylesheet" href="assets/css/all.min.css" />
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="Logo-DH-Quoc-Te-Mien-Dong-EIU-Ogri.webp">
+    
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
-<body class="bg-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-100 dark:bg-slate-900 min-h-screen flex flex-col transition-colors duration-300">
 
-    <header class="bg-white shadow-sm sticky top-0 z-20">
+    <header class="bg-white dark:bg-slate-800/50 dark:border-b dark:border-slate-700 shadow-sm sticky top-0 z-20 transition-colors duration-300">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                 </svg>
-                <h1 class="text-xl font-bold text-slate-800">Công cụ tính điểm EIU</h1>
+                <h1 class="text-xl font-bold text-slate-800 dark:text-slate-200 transition-colors duration-300">Công cụ tính điểm EIU</h1>
             </div>
-            <div>
-                <a href="https://aao.eiu.edu.vn/#/home" target="_blank" class="text-sm font-semibold text-slate-600 hover:text-blue-600 transition-colors">EIU's AAO</a>
+            <div class="flex items-center gap-4">
+                <a href="https://aao.eiu.edu.vn/#/home" target="_blank" class="blurple has-text-weight-bold">EIU's AAO</a>
+                
+                <button id="dark-mode-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 rounded-lg text-sm p-2.5">
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
             </div>
         </nav>
     </header>
-
+    
     <main class="flex-grow flex items-center justify-center p-4 py-8">
-        <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-6 md:p-10">
+        <div class="relative">
             
-            <div class="text-center mb-8">
-                <h1 class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-500 pb-2">
-                    Công cụ tính điểm học phần
-                </h1>
-                <p class="text-slate-500 mt-2">Nhập các cột điểm và trọng số (%) để xem kết quả chi tiết. <br> Hãy thay đổi nội dung cột điểm để phù hợp với môn học cần tính điểm.</p>
+<div class="container2 sun-cloud-animation">
+    <div class="cloud front">
+      <span class="left-front"></span>
+      <span class="right-front"></span>
+    </div>
+
+    <span class="sun sunshine"></span>
+    <span class="sun"></span>
+
+    <div class="moon"></div>
+
+    <div class="cloud back">
+      <span class="left-back"></span>
+      <span class="right-back"></span>
+    </div>
+</div>
+
+            <div class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-10 transition-colors duration-300">
+                
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-500 pb-2">
+                        Công cụ tính điểm học phần
+                    </h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2 transition-colors duration-300">Nhập các cột điểm và trọng số (%) để xem kết quả chi tiết. <br> Hãy thay đổi nội dung cột điểm để phù hợp với môn học cần tính điểm.</p>
+                </div>
+
+                <form id="grade-form" class="space-y-4">
+                    <div class="grid grid-cols-12 gap-2 md:gap-4 items-center px-2 py-2 bg-slate-50 dark:bg-slate-700/50 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 transition-colors duration-300">
+                        <div class="col-span-5">Tên Cột Điểm</div>
+                        <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
+                            <span>Trọng số (%)</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <div class="tooltip absolute bottom-full mb-2 w-64 bg-slate-800 text-white text-sm rounded-lg shadow-lg p-3 z-10 text-left pointer-events-none">
+                                <p class="font-bold">Trọng số là gì?</p>
+                                <p class="mt-1 font-normal">Tương ứng với cột <strong>% Điểm tối đa</strong> trong <strong>Bảng điểm cá nhân.</strong> <strong class="text-yellow-300">Tổng trọng số của tất cả các cột phải là 100%</strong> để đảm bảo kết quả chính xác nhất.</p>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
+                            <span>Điểm (0-100)</span>
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <div class="tooltip absolute bottom-full mb-2 w-64 bg-slate-800 text-white text-sm rounded-lg shadow-lg p-3 z-10 text-left pointer-events-none">
+                                <p class="font-bold">Thang điểm quy định?</p>
+                                <p class="mt-1 font-normal">Vui lòng nhập điểm theo <strong class="text-yellow-300">thang điểm 100</strong>. Ví dụ: 85, 78...</p>
+                            </div>
+                        </div>
+                        <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
+                            <span>Thi cuối kỳ?</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <div class="tooltip absolute bottom-full mb-2 w-64 bg-slate-800 text-white text-sm rounded-lg shadow-lg p-3 z-10 text-left pointer-events-none">
+                                <p class="font-bold">Tại sao cột này quan trọng?</p>
+                                <p class="mt-1 font-normal">Theo quy chế, nếu điểm thi kết thúc học phần <strong class="text-yellow-300">&lt; 1.0 điểm</strong>, bạn sẽ bị tính là <strong class="text-red-400">"Nợ môn" (điểm F)</strong> bất kể tổng điểm của bạn như thế nào.</p>
+                                <p class="mt-2 font-normal">Hãy tích vào ô này để công cụ áp dụng đúng quy tắc điểm liệt.</p>
+                            </div>
+                        </div>
+                        <div class="col-span-1"></div>
+                    </div>
+
+                    <div id="components-container" class="space-y-2">
+                    </div>
+
+                    <div class="text-right font-semibold text-slate-700 dark:text-slate-300 pr-2 pt-2">
+                        Tổng trọng số hiện tại: 
+                        <span id="current-total-weight" class="font-bold text-lg transition-colors">0%</span>
+                    </div>
+
+                    <button type="button" id="add-component-btn" class="w-full text-blue-600 font-semibold py-2.5 px-4 rounded-lg border-2 border-dashed border-slate-300 hover:bg-slate-50 hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2 dark:text-blue-400 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:border-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                        Thêm Cột Điểm
+                    </button>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-sky-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg shadow-blue-500/30">
+                        Tính toán Kết quả
+                    </button>
+                </form>
+                
+                <div id="result" class="mt-10 hidden">
+                    <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
+                         <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-slate-200 mb-6">Kết quả Học tập Chi tiết</h2>
+                        <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6 space-y-4 text-base">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600 dark:text-slate-400">Tổng trọng số đã nhập:</span>
+                                <span id="total-weight" class="font-bold text-slate-800 bg-slate-200 px-2 py-0.5 rounded dark:bg-slate-700 dark:text-slate-200"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600 dark:text-slate-400">Điểm tổng kết (hệ 100):</span>
+                                <span id="final-score" class="font-bold text-2xl text-blue-600 dark:text-blue-500"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600 dark:text-slate-400">Điểm hệ 4:</span>
+                                <span id="score-4" class="font-bold text-slate-800 dark:text-slate-200"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600 dark:text-slate-400">Điểm chữ:</span>
+                                <span id="letter-grade" class="font-bold text-slate-800 dark:text-slate-200"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600 dark:text-slate-400">Xếp loại học phần:</span>
+                                <span id="classification" class="font-bold text-slate-800 dark:text-slate-200"></span>
+                            </div>
+                            <div class="border-t border-slate-200 dark:border-slate-700 my-2"></div>
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="text-slate-600 dark:text-slate-400 font-semibold">Kết quả cuối cùng:</span>
+                                <span id="status" class="font-bold text-xl px-4 py-1.5 rounded-full"></span>
+                            </div>
+                        </div>
+                        <p id="note" class="text-center font-medium mt-4 text-sm"></p>
+                    </div>
+                </div>
+
             </div>
-
-            <form id="grade-form" class="space-y-4">
-                <div class="grid grid-cols-12 gap-2 md:gap-4 items-center px-2 py-2 bg-slate-50 rounded-lg text-sm font-semibold text-slate-600">
-                    <div class="col-span-5">Tên Cột Điểm</div>
-                    <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
-                        <span>Trọng số (%)</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <div class="tooltip absolute bottom-full mb-2 w-64 bg-slate-800 text-white text-sm rounded-lg shadow-lg p-3 z-10 text-left pointer-events-none">
-                            <p class="font-bold">Trọng số là gì?</p>
-                            <p class="mt-1 font-normal">Tương ứng với cột <strong>% Điểm tối đa</strong> trong <strong>Bảng điểm cá nhân.</strong> <strong class="text-yellow-300">Tổng trọng số của tất cả các cột phải là 100%</strong> để đảm bảo kết quả chính xác nhất.</p>
-                        </div>
-                    </div>
-                    <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
-                        <span>Điểm (0-100)</span>
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <div class="tooltip absolute bottom-full mb-2 w-64 bg-slate-800 text-white text-sm rounded-lg shadow-lg p-3 z-10 text-left pointer-events-none">
-                            <p class="font-bold">Thang điểm quy định?</p>
-                            <p class="mt-1 font-normal">Vui lòng nhập điểm theo <strong class="text-yellow-300">thang điểm 100</strong>. Ví dụ: 85, 78...</p>
-                        </div>
-                    </div>
-                    <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
-                        <span>Thi cuối kỳ?</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <div class="tooltip absolute bottom-full mb-2 w-64 bg-slate-800 text-white text-sm rounded-lg shadow-lg p-3 z-10 text-left pointer-events-none">
-                            <p class="font-bold">Tại sao cột này quan trọng?</p>
-                            <p class="mt-1 font-normal">Theo quy chế, nếu điểm thi kết thúc học phần <strong class="text-yellow-300">&lt; 1.0 điểm</strong>, bạn sẽ bị tính là <strong class="text-red-400">"Nợ môn" (điểm F)</strong> bất kể tổng điểm của bạn như thế nào.</p>
-                            <p class="mt-2 font-normal">Hãy tích vào ô này để công cụ áp dụng đúng quy tắc điểm liệt.</p>
-                        </div>
-                    </div>
-                    <div class="col-span-1"></div>
-                </div>
-
-                <div id="components-container" class="space-y-2">
-                </div>
-
-                <div class="text-right font-semibold text-slate-700 pr-2 pt-2">
-                    Tổng trọng số hiện tại: 
-                    <span id="current-total-weight" class="font-bold text-lg transition-colors">0%</span>
-                </div>
-
-                <button type="button" id="add-component-btn" class="w-full text-blue-600 font-semibold py-2.5 px-4 rounded-lg border-2 border-dashed border-slate-300 hover:bg-slate-50 hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                    Thêm Cột Điểm
-                </button>
-
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-sky-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg shadow-blue-500/30">
-                    Tính toán Kết quả
-                </button>
-            </form>
-            
-            <div id="result" class="mt-10 hidden">
-                <div class="border-t border-slate-200 pt-6">
-                     <h2 class="text-2xl font-bold text-center text-slate-800 mb-6">Kết quả Học tập Chi tiết</h2>
-                    <div class="bg-slate-50 rounded-lg p-6 space-y-4 text-base">
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-600">Tổng trọng số đã nhập:</span>
-                            <span id="total-weight" class="font-bold text-slate-800 bg-slate-200 px-2 py-0.5 rounded"></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-600">Điểm tổng kết (hệ 100):</span>
-                            <span id="final-score" class="font-bold text-2xl text-blue-600"></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-600">Điểm hệ 4:</span>
-                            <span id="score-4" class="font-bold text-slate-800"></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-600">Điểm chữ:</span>
-                            <span id="letter-grade" class="font-bold text-slate-800"></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-600">Xếp loại học phần:</span>
-                            <span id="classification" class="font-bold text-slate-800"></span>
-                        </div>
-                        <div class="border-t border-slate-200 my-2"></div>
-                        <div class="flex justify-between items-center pt-2">
-                            <span class="text-slate-600 font-semibold">Kết quả cuối cùng:</span>
-                            <span id="status" class="font-bold text-xl px-4 py-1.5 rounded-full"></span>
-                        </div>
-                    </div>
-                    <p id="note" class="text-center font-medium mt-4 text-sm"></p>
-                </div>
-            </div>
-
         </div>
     </main>
 
-    <footer class="bg-white mt-auto">
-        <div class="container mx-auto px-6 py-4 text-center text-sm text-slate-500">
-            <p>&copy; 2025 - Developed by <a href="https://guns.lol/nguyenquochung/" class="blurple has-text-weight-bold" target="_blank" >Nguyen Quoc Hung</a>. All Rights
-          Reserved.</p>
+    <footer class="bg-white dark:bg-slate-800/50 dark:border-t dark:border-slate-700 mt-auto transition-colors duration-300">
+        <div class="container mx-auto px-6 py-4 text-center text-sm text-slate-500 dark:text-slate-400">
+            <p>&copy; 2025 - Developed by <a href="https://guns.lol/nguyenquochung/" class="blurple has-text-weight-bold" target="_blank" >Nguyen Quoc Hung</a>. All Rights Reserved.</p>
         </div>
     </footer>
     
-    
     <script src="script.js" defer></script>
 </body>
-
 </html>

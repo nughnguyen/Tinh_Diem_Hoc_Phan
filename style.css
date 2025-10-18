@@ -27,3 +27,323 @@
         .blurple {
             color: #7289da;
         }
+
+        /*Mặt Trời Và Mây*/
+        .container2 {
+            width: 250px;
+            height: 250px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cloud {
+            width: 250px;
+        }
+
+        .front {
+            padding-top: 45px;
+            margin-left: 25px;
+            display: inline;
+            position: absolute;
+            z-index: 11;
+            animation: clouds 8s infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        .back {
+            margin-top: -30px;
+            margin-left: 150px;
+            z-index: 12;
+            animation: clouds 12s infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        .right-front {
+            width: 45px;
+            height: 45px;
+            border-radius: 50% 50% 50% 0%;
+            background-color: #4c9beb;
+            display: inline-block;
+            margin-left: -25px;
+            z-index: 5;
+        }
+
+        .left-front {
+            width: 65px;
+            height: 65px;
+            border-radius: 50% 50% 0% 50%;
+            background-color: #4c9beb;
+            display: inline-block;
+            z-index: 5;
+        }
+
+        .right-back {
+            width: 50px;
+            height: 50px;
+            border-radius: 50% 50% 50% 0%;
+            background-color: #4c9beb;
+            display: inline-block;
+            margin-left: -20px;
+            z-index: 5;
+        }
+
+        .left-back {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 0% 50%;
+            background-color: #4c9beb;
+            display: inline-block;
+            z-index: 5;
+        }
+
+        .sun {
+            width: 120px;
+            height: 120px;
+            background: -webkit-linear-gradient(to right, #fcbb04, #fffc00);
+            background: linear-gradient(to right, #fcbb04, #fffc00);
+            border-radius: 60px;
+            display: inline;
+            position: absolute;
+        }
+
+        .sunshine {
+            animation: sunshines 2s infinite;
+        }
+
+        @keyframes sunshines {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes clouds {
+            0% {
+                transform: translateX(15px);
+            }
+
+            50% {
+                transform: translateX(0px);
+            }
+
+            100% {
+                transform: translateX(15px);
+            }
+        }
+
+
+
+        /* Ẩn animation trên màn hình nhỏ để tránh làm vỡ layout */
+        @media (max-width: 1023px) {
+            .sun-cloud-animation {
+                display: none;
+            }
+        }
+
+        /* =============================================== */
+        /* CÀI ĐẶT CHO DARK MODE              */
+        /* =============================================== */
+
+        /* --- Màu nền và chữ cơ bản --- */
+        .dark body {
+            background-color: #0f172a;
+        }
+
+        /* bg-slate-900 */
+        .dark header,
+        .dark footer {
+            background-color: rgba(30, 41, 59, 0.5);
+            border-color: #334155;
+        }
+
+        /* bg-slate-800/50, border-slate-700 */
+        .dark .w-full.max-w-3xl {
+            background-color: #1e293b;
+        }
+
+        /* bg-slate-800 */
+
+        /* --- Màu chữ --- */
+        .dark h1,
+        .dark h2,
+        .dark .font-bold {
+            color: #e2e8f0;
+        }
+
+        /* text-slate-200 */
+        .dark p,
+        .dark span,
+        .dark div {
+            color: #94a3b8;
+        }
+
+        /* text-slate-400 */
+        .dark a {
+            color: #cbd5e1;
+        }
+
+        /* text-slate-300 */
+        .dark .blurple {
+            color: #93a6e6;
+        }
+
+        /* --- Form --- */
+        .dark .bg-slate-50 {
+            background-color: rgba(51, 65, 85, 0.5);
+        }
+
+        /* bg-slate-700/50 */
+        .dark #grade-form input[type="text"],
+        .dark #grade-form input[type="number"] {
+            background-color: #334155;
+            /* bg-slate-700 */
+            border-color: #475569;
+            /* border-slate-600 */
+            color: #f1f5f9;
+            /* text-slate-100 */
+        }
+
+        .dark #grade-form input[type="text"]::placeholder,
+        .dark #grade-form input[type="number"]::placeholder {
+            color: #64748b;
+            /* placeholder-slate-500 */
+        }
+
+        .dark #grade-form input[type="checkbox"] {
+            background-color: #475569;
+            /* bg-slate-600 */
+            border-color: #64748b;
+            /* border-slate-500 */
+        }
+
+        .dark #grade-form input[type="checkbox"]:checked {
+            background-color: #2563eb;
+            /* bg-blue-600 */
+            border-color: #2563eb;
+            /* border-blue-600 */
+        }
+
+        .dark #add-component-btn {
+            color: #60a5fa;
+            /* text-blue-400 */
+            border-color: #475569;
+            /* border-slate-600 */
+        }
+
+        .dark #add-component-btn:hover {
+            background-color: #1e293b;
+            /* hover:bg-slate-800 */
+            border-color: #60a5fa;
+            /* hover:border-blue-400 */
+        }
+
+        /* --- Kết quả --- */
+        .dark #result .bg-slate-50 {
+            background-color: #0f172a;
+        }
+
+        /* bg-slate-900 */
+        .dark #result #total-weight {
+            background-color: #334155;
+            color: #e2e8f0;
+        }
+
+        /* bg-slate-700, text-slate-200 */
+        .dark #result #final-score {
+            color: #60a5fa;
+        }
+
+        /* text-blue-400 */
+
+        /* --- Tooltip --- */
+        .dark .tooltip {
+            background-color: #0f172a;
+            /* bg-slate-900 */
+            color: #cbd5e1;
+            /* text-slate-300 */
+        }
+
+        /* =============================================== */
+        /* ĐOẠN CODE CHO ANIMATION MẶT TRỜI MÂY      */
+        /* =============================================== */
+        .sun-cloud-animation {
+            position: absolute;
+            top: -80px;
+            left: -160px;
+            z-index: -1;
+            transform: scale(0.9);
+        }
+
+        @media (max-width: 1023px) {
+            .sun-cloud-animation {
+                display: none;
+            }
+        }
+
+        /* =============================================== */
+/* CÀI ĐẶT HIỂN THỊ MẶT TRỜI / MẶT TRĂNG         */
+/* =============================================== */
+
+/* 1. Tạo hình dáng và hiệu ứng cho mặt trăng */
+
+.moon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    /* Kỹ thuật dùng box-shadow để tạo hình lưỡi liềm */
+    box-shadow: -25px 18px 0 0px #f0f8ff; /* AliceBlue color */
+    position: absolute;
+    top: 30px;
+    left: 80px;
+    animation: moon-glow 3s infinite alternate ease-in-out;
+}
+
+@keyframes moon-glow {
+    from {
+        box-shadow: -25px 18px 0 0px #f0f8ff;
+    }
+    to {
+        /* Tạo hiệu ứng phát sáng nhẹ */
+        box-shadow: -25px 18px 0 8px rgba(240, 248, 255, 0.1);
+    }
+}
+
+/* 2. Logic ẩn/hiện */
+/* --- Mặc định (chế độ sáng) --- */
+.moon {
+    display: none; /* Ẩn mặt trăng */
+}
+
+/* --- Khi bật dark mode --- */
+.dark .sun {
+    display: none; /* Ẩn mặt trời */
+}
+.dark .moon {
+    display: block; /* Hiện mặt trăng */
+}
+
+/* 3. Đổi màu mây khi ở chế độ tối */
+.dark .left-front,
+.dark .right-front,
+.dark .left-back,
+.dark .right-back {
+    background-color: #64748b; /* slate-500 */
+}
+                /* DÁN ĐOẠN CODE NÀY VÀO CUỐI FILE STYLE.CSS */
+
+        .sun-cloud-animation {
+            position: absolute;
+            top: -40px;
+            left: -250px;
+            z-index: -1;
+            /* Đảm bảo nó nằm dưới khung chính nếu có chồng chéo */
+            transform: scale(0.9);
+            /* Thu nhỏ một chút cho hợp lý hơn */
+        }
