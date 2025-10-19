@@ -29,21 +29,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const createComponentRow = (name = '', weight = '', score = '', isFinal = false) => {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center component-row p-1.5 hover:bg-slate-50 rounded-lg';
+        row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center component-row p-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg';
         
         row.innerHTML = `
             <div class="col-span-5">
-                <input type="text" class="form-input w-full bg-slate-100 border-transparent rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500" placeholder="VD: Chuyên cần" value="${name}">
+                <input type="text" class="form-input w-full bg-slate-100 border-transparent rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="VD: Chuyên cần" value="${name}">
             </div>
             <div class="col-span-2">
-                <input type="number" class="form-input component-weight w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500" placeholder="%" min="0" max="100" step="1" value="${weight}">
+                <input type="number" class="form-input component-weight w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="%" min="0" max="100" step="1" value="${weight}">
             </div>
             <div class="col-span-2">
-                <input type="number" class="form-input component-score w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500" placeholder="Điểm" min="0" max="100" step="0.5" value="${score}">
+                <input type="number" class="form-input component-score w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="Điểm" min="0" max="100" step="0.5" value="${score}">
             </div>
             <div class="col-span-2 flex justify-center">
-                <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded-sm border-slate-300 focus:ring-blue-500 component-final" ${isFinal ? 'checked' : ''}>
-            </div>
+                <label class="animated-checkbox-container">
+                    <input type="checkbox" class="component-final" ${isFinal ? 'checked' : ''}>
+                    <div class="checkmark"></div>
+                </label>
+                </div>
             <div class="col-span-1 flex justify-center">
                 <button type="button" class="remove-btn text-slate-400 hover:text-red-500 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
@@ -193,47 +196,35 @@ document.addEventListener('DOMContentLoaded', function() {
         resultDiv.classList.remove('hidden');
     });
 });
-// Chờ cho toàn bộ nội dung trang được tải xong
+// === LOGIC XỬ LÝ DARK MODE MỚI ===
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Lấy các element cần thiết
-    const themeToggleBtn = document.getElementById('dark-mode-toggle');
-    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggle = document.getElementById('input');
 
-    // Kiểm tra và đặt trạng thái icon ban đầu dựa trên localStorage hoặc cài đặt hệ thống
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        themeToggleLightIcon.classList.remove('hidden');
-    } else {
-        themeToggleDarkIcon.classList.remove('hidden');
-    }
-
-    // Lắng nghe sự kiện click trên nút bấm
-    themeToggleBtn.addEventListener('click', function() {
-        // Đảo ngược trạng thái của icon
-        themeToggleDarkIcon.classList.toggle('hidden');
-        themeToggleLightIcon.classList.toggle('hidden');
-
-        // Nếu theme đã được lưu trong localStorage, thực hiện thay đổi
-        if (localStorage.getItem('color-theme')) {
-            if (localStorage.getItem('color-theme') === 'light') {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            }
-        // Nếu chưa có, kiểm tra class 'dark' trên <html> và lưu lại
+    // Hàm kiểm tra và đặt trạng thái ban đầu cho công tắc
+    const applyInitialTheme = () => {
+        const isDarkMode = localStorage.getItem('color-theme') === 'dark' || 
+                           (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+            themeToggle.checked = true;
         } else {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            }
+            document.documentElement.classList.remove('dark');
+            themeToggle.checked = false;
+        }
+    };
+
+    // Lắng nghe sự kiện thay đổi trên công tắc
+    themeToggle.addEventListener('change', function() {
+        if (themeToggle.checked) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('color-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('color-theme', 'light');
         }
     });
 
-
+    // Áp dụng theme khi trang được tải lần đầu
+    applyInitialTheme();
 });
