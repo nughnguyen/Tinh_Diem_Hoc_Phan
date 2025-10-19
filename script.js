@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
             statusClass = 'bg-red-600 text-white';
         } else {
             status = 'Qua môn';
-            statusClass = 'bg-green-100 text-green-700';
+            statusClass = 'bg-green-600 text-white';
         }
 
         document.getElementById('total-weight').textContent = `${totalWeight}%`;
