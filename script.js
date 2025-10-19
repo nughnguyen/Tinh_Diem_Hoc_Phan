@@ -279,18 +279,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.getElementById('input');
 
     // Hàm kiểm tra và đặt trạng thái ban đầu cho công tắc
-    const applyInitialTheme = () => {
-        const isDarkMode = localStorage.getItem('color-theme') === 'dark' ||
-            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-            themeToggle.checked = true;
-        } else {
-            document.documentElement.classList.remove('dark');
-            themeToggle.checked = false;
-        }
-    };
+const applyInitialTheme = () => {
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        themeToggle.checked = true;
+    } else {
+        document.documentElement.classList.remove('dark');
+        themeToggle.checked = false;
+    }
+};
 
     // Lắng nghe sự kiện thay đổi trên công tắc
     themeToggle.addEventListener('change', function () {

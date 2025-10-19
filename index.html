@@ -14,10 +14,13 @@
   <link rel="icon" type="image/png" href="Logo-DH-Quoc-Te-Mien-Dong-EIU-Ogri.webp">
 
   <script>
+    // Logic mới ưu tiên lựa chọn của người dùng
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      // Nếu người dùng đã chọn 'dark', HOẶC chưa chọn gì và hệ thống là 'dark' -> bật dark mode
       document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark')
+      // Ngược lại (người dùng đã chọn 'light') -> tắt dark mode
+      document.documentElement.classList.remove('dark');
     }
   </script>
 </head>
