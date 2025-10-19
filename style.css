@@ -170,24 +170,23 @@
 
         /* bg-slate-800 */
 
-        /* --- Màu chữ --- */
-        .dark h1,
-        .dark h2,
-        .dark .font-bold {
-            color: #e2e8f0;
-        }
+/* --- Màu chữ (ĐÃ TĂNG ĐỘ SÁNG) --- */
+.dark h1,
+.dark h2,
+.dark .font-bold {
+    color: #f1f5f9; /* text-slate-100 */
+}
 
-        /* text-slate-200 */
-        .dark p,
-        .dark span,
-        .dark div {
-            color: #94a3b8;
-        }
+/* Đây là thay đổi quan trọng nhất cho các đoạn văn bản */
+.dark p,
+.dark span,
+.dark div {
+    color: #cbd5e1; /* text-slate-300 */
+}
 
-        /* text-slate-400 */
-        .dark a {
-            color: #cbd5e1;
-        }
+.dark a {
+    color: #e2e8f0; /* text-slate-200 */
+}
 
         /* text-slate-300 */
         .dark .blurple {
@@ -344,7 +343,6 @@
             /* slate-500 */
         }
 
-        /* DÁN ĐOẠN CODE NÀY VÀO CUỐI FILE STYLE.CSS */
 
         .sun-cloud-animation {
             position: absolute;
@@ -472,7 +470,9 @@
         }
 
 
-/* From Uiverse.io by RiccardoRapelli */ 
+        /* =============================================== */
+        /* ANIMATED DARK MODE TOGGLE SWITCH                */
+        /* =============================================== */
 .switch {
   position: relative;
   display: inline-block;
@@ -745,3 +745,78 @@
     transform: scale(1);
   }
 }
+/* THÊM VÀO CUỐI FILE STYLE.CSS */
+.dark .component-row:hover {
+    background-color: rgb(30 45 65);
+}
+/* =============================================== */
+/* HỘP THOẠI ALERT TÙY CHỈNH NÂNG CẤP          */
+/* =============================================== */
+
+/* --- Keyframes cho animation --- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scaleDown {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.9); opacity: 0; }
+}
+
+/* --- Áp dụng animation --- */
+#custom-alert-backdrop {
+    /* Mặc định ẩn đi */
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.3s, opacity 0.3s ease;
+}
+
+#custom-alert-box {
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+}
+
+/* --- Class điều khiển hiển thị --- */
+#custom-alert-backdrop.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#custom-alert-backdrop.show #custom-alert-box {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+/* =============================================== */
+/* FIX & NÂNG CẤP ALERT BOX (DARK MODE)        */
+/* =============================================== */
+
+/* Sửa lỗi nền trắng và tăng độ sáng chữ */
+.dark #custom-alert-box {
+    background-color: #1e293b; /* Đây là màu bg-slate-800 */
+}
+
+.dark #custom-alert-box h3 {
+    color: #f1f5f9; /* text-slate-100, Sáng nhất */
+}
+
+.dark #custom-alert-box p {
+    color: #e2e8f0; /* text-slate-200, Sáng hơn */
+}
+

@@ -23,7 +23,7 @@
 <body class="bg-slate-100 dark:bg-slate-900 min-h-screen flex flex-col transition-colors duration-300">
 
     <header class="bg-white dark:bg-slate-800/50 dark:border-b dark:border-slate-700 shadow-sm sticky top-0 z-20 transition-colors duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <nav class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -227,5 +227,17 @@
     </footer>
     
     <script src="script.js" defer></script>
+<div id="custom-alert-backdrop" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+    <div id="custom-alert-box" class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-sm p-6 text-center transform">
+        <div class="w-16 h-16 bg-red-100 dark:bg-amber-500/20 rounded-full mx-auto flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-red-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-2">Thông báo</h3>
+        <p id="custom-alert-message" class="text-sm text-slate-500 dark:text-slate-400 mb-6"></p>
+        <button id="custom-alert-ok-btn" class="bg-blue-600 text-white font-bold py-2.5 px-8 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 w-full">
+            Đã hiểu
+        </button>
+    </div>
+</div>
 </body>
 </html>

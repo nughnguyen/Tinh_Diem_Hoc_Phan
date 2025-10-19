@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
+// === LOGIC CHO HỘP THOẠI TÙY CHỈNH NÂNG CẤP ===
+const alertBackdrop = document.getElementById('custom-alert-backdrop');
+const alertBox = document.getElementById('custom-alert-box');
+const alertMessage = document.getElementById('custom-alert-message');
+const alertOkBtn = document.getElementById('custom-alert-ok-btn');
+
+function showCustomAlert(message) {
+    alertMessage.textContent = message;
+    alertBackdrop.classList.add('show');
+}
+
+function hideCustomAlert() {
+    alertBackdrop.classList.remove('show');
+}
+
+alertOkBtn.addEventListener('click', hideCustomAlert);
+
+alertBackdrop.addEventListener('click', (e) => {
+    if (e.target === alertBackdrop) {
+        hideCustomAlert();
+    }
+});
+// ===============================================
     const componentsContainer = document.getElementById('components-container');
     const addComponentBtn = document.getElementById('add-component-btn');
     const gradeForm = document.getElementById('grade-form');
@@ -29,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const createComponentRow = (name = '', weight = '', score = '', isFinal = false) => {
         const row = document.createElement('div');
-        row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center component-row p-1.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg';
+        row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center component-row p-1.5 hover:bg-slate-50 rounded-lg';
         
         row.innerHTML = `
             <div class="col-span-5">
@@ -83,17 +106,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    componentsContainer.addEventListener('input', function(e) {
-        if (e.target.classList.contains('component-score')) {
-            if (parseFloat(e.target.value) > 100) {
-                alert('Điểm không hợp lệ. Vui lòng chỉ nhập điểm trong thang điểm 100.');
-                e.target.value = '';
-            }
+componentsContainer.addEventListener('input', function(e) {
+    if (e.target.classList.contains('component-score')) {
+        const scoreValue = parseFloat(e.target.value);
+        if (scoreValue > 100) {
+            // SỬA Ở ĐÂY: Dùng showCustomAlert thay cho alert
+            showCustomAlert('Điểm không hợp lệ. Vui lòng chỉ nhập điểm trong thang điểm 100.');
+            e.target.value = '';
+        } else if (scoreValue < 0) {
+            // SỬA Ở ĐÂY: Dùng showCustomAlert thay cho alert (thêm trường hợp điểm âm)
+            showCustomAlert('Điểm không hợp lệ. Điểm không được là số âm.');
+            e.target.value = '';
         }
-        if (e.target.classList.contains('component-weight')) {
-            updateTotalWeight();
-        }
-    });
+    }
+    if (e.target.classList.contains('component-weight')) {
+        updateTotalWeight();
+    }
+});
 
     gradeForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -123,12 +152,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         if (!hasInput) {
-            alert('Vui lòng nhập ít nhất một cột điểm có trọng số và điểm số hợp lệ.');
+            showCustomAlert('Vui lòng nhập ít nhất một cột điểm có trọng số và điểm số hợp lệ.');
             return;
         }
 
         if (totalWeight > 100) {
-            alert('Tổng trọng số đã vượt quá 100%. Vui lòng kiểm tra lại.');
+            showCustomAlert('Tổng trọng số đã vượt quá 100%. Vui lòng kiểm tra lại.');
             resultDiv.classList.add('hidden');
             return;
         }
