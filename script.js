@@ -56,9 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
         componentsContainer.appendChild(row);
     };
 
-    createComponentRow('Chuyên Cần', '', '', false);
-    createComponentRow('Kiểm Tra Giữa Kỳ', '', '', false);
-    createComponentRow('Kiểm Tra Cuối Kỳ', '', '', true);
+    createComponentRow('Điểm thành phần', '20', '', false);
+    createComponentRow('Kiểm Tra Giữa Kỳ', '30', '', false);
+    createComponentRow('Kiểm Tra Cuối Kỳ', '50', '', true);
     updateTotalWeight();
 
     addComponentBtn.addEventListener('click', () => {
