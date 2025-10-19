@@ -4,6 +4,7 @@ const alertBackdrop = document.getElementById('custom-alert-backdrop');
 const alertBox = document.getElementById('custom-alert-box');
 const alertMessage = document.getElementById('custom-alert-message');
 const alertOkBtn = document.getElementById('custom-alert-ok-btn');
+const submitBtn = document.querySelector('#grade-form button[type="submit"]');
 
 function showCustomAlert(message) {
     alertMessage.textContent = message;
@@ -50,34 +51,48 @@ alertBackdrop.addEventListener('click', (e) => {
         }
     };
 
-    const createComponentRow = (name = '', weight = '', score = '', isFinal = false) => {
-        const row = document.createElement('div');
-        row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center component-row p-1.5 hover:bg-slate-50 rounded-lg';
-        
-        row.innerHTML = `
-            <div class="col-span-5">
-                <input type="text" class="form-input w-full bg-slate-100 border-transparent rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="VD: Chuyên cần" value="${name}">
+    // HÀM MỚI: Kiểm tra tất cả lỗi và bật/tắt nút Tính toán
+const validateFormInputs = () => {
+    const errors = componentsContainer.querySelectorAll('.error-message.show');
+    if (errors.length > 0) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+};
+
+const createComponentRow = (name = '', weight = '', score = '', isFinal = false) => {
+    const row = document.createElement('div');
+    // SỬA Ở ĐÂY: Thêm class 'flex-wrap' để thông báo lỗi xuống dòng
+    row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center component-row p-1.5 hover:bg-slate-50 dark:hover:bg-[rgb(30,45,65)] rounded-lg flex-wrap';
+
+    row.innerHTML = `
+        <div class="col-span-5">
+            <input type="text" class="form-input w-full bg-slate-100 border-transparent rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="VD: Chuyên cần" value="${name}">
+        </div>
+        <div class="col-span-2">
+            <input type="number" class="form-input component-weight w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="%" min="0" max="100" step="1" value="${weight}">
+        </div>
+        <div class="col-span-2">
+            <input type="number" class="form-input component-score w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="Điểm" min="0" max="100" step="0.5" value="${score}">
+        </div>
+        <div class="col-span-2 flex justify-center">
+            <label class="animated-checkbox-container">
+                <input type="checkbox" class="component-final" ${isFinal ? 'checked' : ''}>
+                <div class="checkmark"></div>
+            </label>
             </div>
-            <div class="col-span-2">
-                <input type="number" class="form-input component-weight w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="%" min="0" max="100" step="1" value="${weight}">
-            </div>
-            <div class="col-span-2">
-                <input type="number" class="form-input component-score w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="Điểm" min="0" max="100" step="0.5" value="${score}">
-            </div>
-            <div class="col-span-2 flex justify-center">
-                <label class="animated-checkbox-container">
-                    <input type="checkbox" class="component-final" ${isFinal ? 'checked' : ''}>
-                    <div class="checkmark"></div>
-                </label>
-                </div>
-            <div class="col-span-1 flex justify-center">
-                <button type="button" class="remove-btn text-slate-400 hover:text-red-500 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                </button>
-            </div>
-        `;
-        componentsContainer.appendChild(row);
-    };
+        <div class="col-span-1 flex justify-center">
+            <button type="button" class="remove-btn text-slate-400 hover:text-red-500 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+        </div>
+        <p class="error-message">Lỗi sẽ hiện ở đây</p>
+    `;
+    componentsContainer.appendChild(row);
+};
 
     createComponentRow('Điểm thành phần', '20', '', false);
     createComponentRow('Kiểm Tra Giữa Kỳ', '30', '', false);
@@ -106,22 +121,56 @@ alertBackdrop.addEventListener('click', (e) => {
         }
     });
 
+
 componentsContainer.addEventListener('input', function(e) {
-    if (e.target.classList.contains('component-score')) {
-        const scoreValue = parseFloat(e.target.value);
-        if (scoreValue > 100) {
-            // SỬA Ở ĐÂY: Dùng showCustomAlert thay cho alert
-            showCustomAlert('Điểm không hợp lệ. Vui lòng chỉ nhập điểm trong thang điểm 100.');
-            e.target.value = '';
-        } else if (scoreValue < 0) {
-            // SỬA Ở ĐÂY: Dùng showCustomAlert thay cho alert (thêm trường hợp điểm âm)
-            showCustomAlert('Điểm không hợp lệ. Điểm không được là số âm.');
-            e.target.value = '';
-        }
+    const target = e.target; // Ô input cụ thể vừa được thay đổi
+    const row = target.closest('.component-row');
+    if (!row) return;
+
+    // Lấy tất cả các phần tử liên quan trong hàng
+    const scoreInput = row.querySelector('.component-score');
+    const weightInput = row.querySelector('.component-weight');
+    const errorMessageEl = row.querySelector('.error-message');
+    
+    let message = ''; // Bắt đầu với trạng thái không có lỗi
+
+    // --- Logic mới: Kiểm tra lại CẢ HAI ô input mỗi lần có thay đổi ---
+    
+    // 1. Kiểm tra lỗi của ô Trọng số trước
+    const weightValue = parseFloat(weightInput.value);
+    if (weightValue > 100) {
+        message = 'Trọng số không thể lớn hơn 100%.';
+    } else if (weightValue < 0) {
+        message = 'Trọng số không thể là số âm.';
     }
-    if (e.target.classList.contains('component-weight')) {
+
+    // 2. Kiểm tra lỗi của ô Điểm (lỗi này sẽ được ưu tiên hiển thị nếu cả 2 cùng sai)
+    const scoreValue = parseFloat(scoreInput.value);
+    if (scoreValue > 100) {
+        message = 'Điểm không thể lớn hơn 100.';
+    } else if (scoreValue < 0) {
+        message = 'Điểm không thể là số âm.';
+    }
+
+    // 3. Cập nhật giao diện dựa trên kết quả kiểm tra cuối cùng
+    if (message) {
+        // Nếu có bất kỳ lỗi nào, hiển thị nó
+        errorMessageEl.textContent = message;
+        errorMessageEl.classList.add('show');
+    } else {
+        // Chỉ ẩn thông báo khi CẢ HAI ô đều hợp lệ
+        errorMessageEl.classList.remove('show');
+    }
+    
+    // --- Các hành động phụ ---
+
+    // Nếu người dùng thay đổi trọng số, thì cập nhật tổng
+    if (target.classList.contains('component-weight')) {
         updateTotalWeight();
     }
+
+    // Luôn luôn kiểm tra lại toàn bộ form để bật/tắt nút "Tính toán"
+    validateFormInputs();
 });
 
     gradeForm.addEventListener('submit', function(event) {
@@ -204,7 +253,7 @@ componentsContainer.addEventListener('input', function(e) {
             score4 = 0.0;
             classification = 'Kém';
             status = 'Nợ môn';
-            statusClass = 'bg-red-100 text-red-700';
+            statusClass = 'bg-red-600 text-white';
         } else {
             status = 'Qua môn';
             statusClass = 'bg-green-100 text-green-700';

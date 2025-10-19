@@ -820,3 +820,28 @@
     color: #e2e8f0; /* text-slate-200, Sáng hơn */
 }
 
+/* =============================================== */
+/* KIỂU DÁNG CHO THÔNG BÁO LỖI INPUT (NÂNG CẤP) */
+/* =============================================== */
+.error-message {
+    display: none; /* Mặc định ẩn đi */
+    color: #dc2626; /* text-red-600, màu đỏ đậm hơn */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* medium, chữ đậm hơn một chút */
+    margin-top: 0.5rem; /* mt-2 */
+    grid-column: span 12 / span 12; /* Kéo dài hết chiều rộng hàng */
+    text-align: right;
+    padding-right: 0.75rem;
+}
+
+/* Class để hiện thông báo */
+.error-message.show {
+    display: block;
+}
+/* =============================================== */
+/* MÀU CHỮ THÔNG BÁO LỖI (DARK MODE)           */
+/* =============================================== */
+
+.dark .error-message {
+    color: #f87171 !important; /* text-red-400, màu đỏ tươi */
+}
