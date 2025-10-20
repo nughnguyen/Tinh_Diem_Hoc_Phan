@@ -224,17 +224,55 @@ document.addEventListener('DOMContentLoaded', function () {
             noteEl.classList.add('text-red-600');
         }
 
-        if (finalScore >= 95) { letterGrade = 'A+'; score4 = 4.0; classification = 'Giỏi'; }
-        else if (finalScore >= 85) { letterGrade = 'A'; score4 = 4.0; classification = 'Giỏi'; }
-        else if (finalScore >= 80) { letterGrade = 'A-'; score4 = 3.65; classification = 'Giỏi'; }
-        else if (finalScore >= 75) { letterGrade = 'B+'; score4 = 3.33; classification = 'Khá'; }
-        else if (finalScore >= 70) { letterGrade = 'B'; score4 = 3.0; classification = 'Khá'; }
-        else if (finalScore >= 65) { letterGrade = 'B-'; score4 = 2.65; classification = 'Khá'; }
-        else if (finalScore >= 60) { letterGrade = 'C+'; score4 = 2.33; classification = 'Trung bình'; }
-        else if (finalScore >= 55) { letterGrade = 'C'; score4 = 2.0; classification = 'Trung bình'; }
-        else if (finalScore >= 45) { letterGrade = 'C-'; score4 = 1.65; classification = 'Trung bình yếu'; }
-        else if (finalScore >= 40) { letterGrade = 'D'; score4 = 1.0; classification = 'Trung bình yếu'; }
-        else { letterGrade = 'F'; score4 = 0.0; classification = 'Kém'; }
+        if (finalScore >= 90) {
+            letterGrade = 'A';
+            score4 = 4.0;
+            classification = 'Giỏi';
+        } else if (finalScore >= 85) {
+            letterGrade = 'A-';
+            score4 = 3.7;
+            classification = 'Giỏi';
+        } else if (finalScore >= 80) {
+            letterGrade = 'B+';
+            score4 = 3.3;
+            classification = 'Khá';
+        } else if (finalScore >= 75) {
+            letterGrade = 'B';
+            score4 = 3.0;
+            classification = 'Khá';
+        } else if (finalScore >= 70) {
+            letterGrade = 'B-';
+            score4 = 2.7;
+            classification = 'Khá';
+        } else if (finalScore >= 65) {
+            letterGrade = 'C+';
+            score4 = 2.3;
+            classification = 'Trung bình';
+        } else if (finalScore >= 60) {
+            letterGrade = 'C';
+            score4 = 2.0;
+            classification = 'Trung bình';
+        } else if (finalScore >= 55) {
+            letterGrade = 'C-';
+            score4 = 1.7;
+            classification = 'Trung bình';
+        } else if (finalScore >= 53) {
+            letterGrade = 'D+';
+            score4 = 1.3;
+            classification = 'Trung bình yếu';
+        } else if (finalScore >= 52) {
+            letterGrade = 'D';
+            score4 = 1.0;
+            classification = 'Trung bình yếu';
+        } else if (finalScore >= 50) {
+            letterGrade = 'D-';
+            score4 = 0.7;
+            classification = 'Trung bình yếu';
+        } else {
+            letterGrade = 'F';
+            score4 = 0.0;
+            classification = 'Kém';
+        }
 
         if (isFailed) {
             letterGrade = 'F';
@@ -300,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const db = firebase.firestore();
     const realtimeDb = firebase.database();
-    
+
     const totalVisitsEl = document.getElementById('total-visits');
     const concurrentUsersEl = document.getElementById('concurrent-users');
 
