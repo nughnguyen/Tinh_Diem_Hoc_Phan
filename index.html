@@ -265,19 +265,24 @@
   <footer
     class="bg-white dark:bg-slate-800/50 dark:border-t dark:border-slate-700 mt-auto transition-colors duration-300">
     <div class="container mx-auto px-6 py-4 text-center text-sm text-slate-500 dark:text-slate-400">
+       <!-- === BỘ ĐẾM === -->
+       <div class="mb-2">
+        <span>📊 Lượt truy cập: <b id="total-visits">Loading...</b></span> |
+        <span>🟢 Đang online: <b id="concurrent-users">Loading...</b></span>
+      </div>
+      <!-- ============= -->
       <p>&copy; 2025 - Developed by <a href="https://guns.lol/nguyenquochung/" class="blurple has-text-weight-bold"
           target="_blank">Nguyen Quoc Hung</a>. All Rights Reserved.</p>
     </div>
   </footer>
 
-  <script src="script.js" defer></script>
   <div id="custom-alert-backdrop"
     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
     <div id="custom-alert-box"
       class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-sm p-6 text-center transform">
       <div class="w-16 h-16 bg-red-100 dark:bg-amber-500/20 rounded-full mx-auto flex items-center justify-center mb-4">
         <svg class="w-8 h-8 text-red-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          xmlns="http://www.w.org/2000/svg">
+          xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
           </path>
@@ -291,6 +296,31 @@
       </button>
     </div>
   </div>
+
+  <!-- Thêm vào ngay trước thẻ </body> -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqEdpog-U9j1S6M1JDKL2NhvVJa74Aw_Q",
+      authDomain: "web-views-counter.firebaseapp.com",
+      projectId: "web-views-counter",
+      storageBucket: "web-views-counter.appspot.com",
+      messagingSenderId: "657197330059",
+      appId: "1:657197330059:web:c200e6fab14da44210ae8e",
+      measurementId: "G-0EX9XDP2BR"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const realtimeDb = firebase.database();
+  </script>
+  
+  <script src="script.js" defer></script>
 
 </body>
 

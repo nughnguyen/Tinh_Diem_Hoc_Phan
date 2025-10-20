@@ -127,16 +127,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const row = target.closest('.component-row');
         if (!row) return;
 
-        // Lấy tất cả các phần tử liên quan trong hàng
         const scoreInput = row.querySelector('.component-score');
         const weightInput = row.querySelector('.component-weight');
         const errorMessageEl = row.querySelector('.error-message');
 
-        let message = ''; // Bắt đầu với trạng thái không có lỗi
+        let message = '';
 
-        // --- Logic mới: Kiểm tra lại CẢ HAI ô input mỗi lần có thay đổi ---
-
-        // 1. Kiểm tra lỗi của ô Trọng số trước
         const weightValue = parseFloat(weightInput.value);
         if (weightValue > 100) {
             message = 'Trọng số không thể lớn hơn 100%.';
@@ -144,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
             message = 'Trọng số không thể là số âm.';
         }
 
-        // 2. Kiểm tra lỗi của ô Điểm (lỗi này sẽ được ưu tiên hiển thị nếu cả 2 cùng sai)
         const scoreValue = parseFloat(scoreInput.value);
         if (scoreValue > 100) {
             message = 'Điểm không thể lớn hơn 100.';
@@ -152,24 +147,17 @@ document.addEventListener('DOMContentLoaded', function () {
             message = 'Điểm không thể là số âm.';
         }
 
-        // 3. Cập nhật giao diện dựa trên kết quả kiểm tra cuối cùng
         if (message) {
-            // Nếu có bất kỳ lỗi nào, hiển thị nó
             errorMessageEl.textContent = message;
             errorMessageEl.classList.add('show');
         } else {
-            // Chỉ ẩn thông báo khi CẢ HAI ô đều hợp lệ
             errorMessageEl.classList.remove('show');
         }
 
-        // --- Các hành động phụ ---
-
-        // Nếu người dùng thay đổi trọng số, thì cập nhật tổng
         if (target.classList.contains('component-weight')) {
             updateTotalWeight();
         }
 
-        // Luôn luôn kiểm tra lại toàn bộ form để bật/tắt nút "Tính toán"
         validateFormInputs();
     });
 
@@ -274,22 +262,21 @@ document.addEventListener('DOMContentLoaded', function () {
         resultDiv.classList.remove('hidden');
     });
 });
+
 // === LOGIC XỬ LÝ DARK MODE MỚI ===
 document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.getElementById('input');
 
-    // Hàm kiểm tra và đặt trạng thái ban đầu cho công tắc
-const applyInitialTheme = () => {
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-        themeToggle.checked = true;
-    } else {
-        document.documentElement.classList.remove('dark');
-        themeToggle.checked = false;
-    }
-};
+    const applyInitialTheme = () => {
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggle.checked = true;
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggle.checked = false;
+        }
+    };
 
-    // Lắng nghe sự kiện thay đổi trên công tắc
     themeToggle.addEventListener('change', function () {
         if (themeToggle.checked) {
             document.documentElement.classList.add('dark');
@@ -300,6 +287,59 @@ const applyInitialTheme = () => {
         }
     });
 
-    // Áp dụng theme khi trang được tải lần đầu
     applyInitialTheme();
+});
+
+
+// === LOGIC ĐẾM LƯỢT TRUY CẬP VÀ NGƯỜI DÙNG ONLINE VỚI FIREBASE ===
+document.addEventListener('DOMContentLoaded', function () {
+    // Kiểm tra xem biến 'firebase' có tồn tại không để tránh lỗi
+    if (typeof firebase === 'undefined') {
+        console.error("Firebase chưa được khởi tạo!");
+        return;
+    }
+    const db = firebase.firestore();
+    const realtimeDb = firebase.database();
+    
+    const totalVisitsEl = document.getElementById('total-visits');
+    const concurrentUsersEl = document.getElementById('concurrent-users');
+
+    // --- Xử lý Tổng lượt truy cập (dùng Firestore) ---
+    const counterDocRef = db.collection('siteStats').doc('visits');
+
+    // Chỉ tăng lượt truy cập một lần khi người dùng mới vào trang
+    counterDocRef.get().then((doc) => {
+        let newCount = 1;
+        if (doc.exists && doc.data().count) {
+            newCount = doc.data().count + 1;
+        }
+        // Cập nhật lại số đếm trên server 
+        counterDocRef.set({ count: newCount }, { merge: true });
+    }).catch(err => {
+        console.error("Lỗi khi cập nhật lượt truy cập: ", err);
+        totalVisitsEl.textContent = "N/A";
+    });
+
+    // Lắng nghe thay đổi real-time để cập nhật cho tất cả user
+    counterDocRef.onSnapshot((doc) => {
+        if (doc.exists) {
+            totalVisitsEl.textContent = doc.data().count.toLocaleString('vi-VN');
+        }
+    });
+
+
+    // --- Xử lý số người đang online (dùng Realtime Database) ---
+    const presenceRef = realtimeDb.ref('/onlineUsers');
+    const myPresenceRef = presenceRef.push();
+
+    realtimeDb.ref('.info/connected').on('value', (snapshot) => {
+        if (snapshot.val() === true) {
+            myPresenceRef.set(true);
+            myPresenceRef.onDisconnect().remove();
+        }
+    });
+
+    presenceRef.on('value', (snapshot) => {
+        concurrentUsersEl.textContent = snapshot.numChildren().toLocaleString('vi-VN');
+    });
 });
