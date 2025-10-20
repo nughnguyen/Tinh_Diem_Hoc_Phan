@@ -845,3 +845,61 @@
 .dark .error-message {
     color: #f87171 !important; /* text-red-400, màu đỏ tươi */
 }
+/* =============================================== */
+/* NÚT RESET VỀ MẶC ĐỊNH                       */
+/* =============================================== */
+.reset-button {
+  font-size: 15px; /* Giảm kích thước một chút cho phù hợp */
+  font-family: inherit;
+  font-weight: 600; /* Điều chỉnh độ đậm */
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: color;
+  /* Màu cho chế độ sáng */
+  color: #475569; /* slate-600 */
+}
+
+.reset-button:focus,
+.reset-button:hover {
+  color: #1e293b; /* slate-800 */
+}
+
+.reset-button:focus:after,
+.reset-button:hover:after {
+  width: 100%;
+  left: 0%;
+}
+
+.reset-button:after {
+  content: "";
+  pointer-events: none;
+  bottom: -2px;
+  left: 50%;
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  /* Màu gạch chân cho chế độ sáng */
+  background-color: #1e293b; /* slate-800 */
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: width, left;
+}
+
+/* Tùy chỉnh cho chế độ tối */
+.dark .reset-button {
+  color: #94a3b8; /* slate-400 */
+}
+
+.dark .reset-button:focus,
+.dark .reset-button:hover {
+  color: #e2e8f0; /* slate-200 */
+}
+
+.dark .reset-button:after {
+  background-color: #e2e8f0; /* slate-200 */
+}
