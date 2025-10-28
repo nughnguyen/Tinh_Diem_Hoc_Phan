@@ -903,3 +903,72 @@
 .dark .reset-button:after {
   background-color: #e2e8f0; /* slate-200 */
 }
+
+/* =============================================== */
+/* BỘ CHỌN TRƯỜNG (MỚI)                         */
+/* =============================================== */
+#school-list li button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #334155; /* slate-700 */
+    transition: background-color 0.2s, color 0.2s;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.dark #school-list li button {
+    color: #cbd5e1; /* slate-300 */
+}
+
+#school-list li button:hover {
+    background-color: #f1f5f9; /* slate-100 */
+}
+
+.dark #school-list li button:hover {
+    background-color: #334155; /* slate-700 */
+    color: #f1f5f9; /* slate-100 */
+}
+
+/* Kiểu cho mục đang được chọn */
+#school-list li button.selected {
+    background-color: #2563eb; /* blue-600 */
+    color: white;
+    font-weight: 600;
+}
+
+.dark #school-list li button.selected {
+    background-color: #3b82f6; /* blue-500 */
+    color: white;
+}
+
+/* Tùy chỉnh thanh cuộn cho danh sách */
+#school-list::-webkit-scrollbar {
+    width: 6px;
+}
+#school-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#school-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* slate-300 */
+    border-radius: 3px;
+}
+.dark #school-list::-webkit-scrollbar-thumb {
+    background: #475569; /* slate-600 */
+}
+
+/* Hiển thị thông báo "Không tìm thấy" */
+#school-list li span.no-result {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.875rem;
+    color: #64748b; /* slate-500 */
+}
+
+.dark #school-list li span.no-result {
+    color: #94a3b8; /* slate-400 */
+}

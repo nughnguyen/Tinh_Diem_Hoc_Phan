@@ -10,6 +10,42 @@ document.addEventListener('DOMContentLoaded', function () {
     const alertOkBtn = document.getElementById('custom-alert-ok-btn');
     const submitBtn = document.querySelector('#grade-form button[type="submit"]');
     const resetBtn = document.getElementById('reset-btn');
+    // === BIẾN MỚI CHO BỘ CHỌN TRƯỜNG ===
+    const schoolSelectorBtn = document.getElementById('school-selector-btn');
+    const schoolDropdown = document.getElementById('school-dropdown');
+    const schoolSearchInput = document.getElementById('school-search-input');
+    const schoolList = document.getElementById('school-list');
+    const mainPageTitle = document.getElementById('main-page-title');
+    const currentSchoolNameBtn = document.getElementById('current-school-name-btn');
+    const schoolAaoLink = document.getElementById('school-aao-link');
+    const pageTitle = document.querySelector('title'); // Lấy thẻ <title>
+
+    // === DỮ LIỆU CÁC TRƯỜNG ĐẠI HỌC ===
+    const universities = {
+        'eiu': {
+            name: 'ĐH Quốc Tế Miền Đông (EIU)',
+            shortName: 'EIU',
+            aaoUrl: 'https://aao.eiu.edu.vn/#/home',
+            aaoText: "EIU's AAO"
+        },
+        'uit': {
+            name: 'ĐH Công Nghệ Thông Tin (UIT-VNU)',
+            shortName: 'UIT',
+            aaoUrl: 'https://daa.uit.edu.vn/',
+            aaoText: "UIT's Portal"
+        },
+        'bdu': {
+            name: 'ĐH Bình Dương (BDU)',
+            shortName: 'BDU',
+            aaoUrl: 'http://sinhvien.bdu.edu.vn/',
+            aaoText: "BDU's Portal"
+        }
+        // Thêm các trường khác ở đây với key duy nhất
+        // 'hcmut': { name: 'ĐH Bách Khoa (HCMUT)', shortName: 'HCMUT', ... }
+    };
+    
+    // Biến toàn cục để lưu trường đang chọn
+    let currentUniversityKey = 'eiu'; // Mặc định là EIU
 
     // === CÁC HÀM XỬ LÝ LOGIC CHÍNH ===
 
@@ -33,9 +69,93 @@ document.addEventListener('DOMContentLoaded', function () {
         const scoreValue = parseFloat(scoreInput.value);
         if (scoreValue > 100) message = 'Điểm không thể lớn hơn 100.';
         else if (scoreValue < 0) message = 'Điểm không thể là số âm.';
-
         errorMessageEl.textContent = message;
         errorMessageEl.classList.toggle('show', !!message); // !!message chuyển chuỗi thành boolean
+    };
+    // === CÁC HÀM MỚI CHO BỘ CHỌN TRƯỜNG ===
+
+    /**
+     * HÀM MỚI: Cập nhật UI theo trường đã chọn
+     * @param {string} key - Key của trường (ví dụ: 'eiu')
+     */
+    const setUniversity = (key) => {
+        if (!universities[key]) key = 'eiu'; // An toàn, quay về mặc định nếu key sai
+        
+        currentUniversityKey = key;
+        const uni = universities[key];
+
+        // Cập nhật UI
+        mainPageTitle.textContent = `Công cụ tính điểm ${uni.shortName}`;
+        currentSchoolNameBtn.textContent = uni.shortName;
+        schoolAaoLink.href = uni.aaoUrl;
+        schoolAaoLink.textContent = uni.aaoText;
+        pageTitle.textContent = `Công cụ tính điểm | ${uni.shortName}`; // Cập nhật title của tab
+
+        // Lưu lựa chọn vào Local Storage
+        localStorage.setItem('selectedUniversity', key);
+        
+        // Cập nhật lại danh sách để highlight mục đã chọn
+        populateSchoolList(schoolSearchInput.value); // Giữ nguyên filter
+        
+        // Ẩn dropdown
+        schoolDropdown.classList.add('hidden');
+        
+        // Reset kết quả cũ vì quy tắc đã thay đổi
+        resultDiv.classList.add('hidden');
+        
+        // Bạn có thể thêm 1 thông báo nhỏ ở đây
+        // showCustomAlert(`Đã chuyển sang quy tắc tính điểm của ${uni.name}.`);
+    };
+
+    /**
+     * HÀM MỚI: Hiển thị danh sách trường (có lọc)
+     * @param {string} filter - Chuỗi tìm kiếm
+     */
+    const populateSchoolList = (filter = '') => {
+        schoolList.innerHTML = ''; // Xóa list cũ
+        const filterLower = filter.toLowerCase().trim();
+        let hasResults = false;
+
+        Object.keys(universities).forEach(key => {
+            const uni = universities[key];
+            if (uni.name.toLowerCase().includes(filterLower) || uni.shortName.toLowerCase().includes(filterLower)) {
+                hasResults = true;
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent = uni.name;
+                button.dataset.key = key; // Lưu key vào data-attribute
+                
+                if (key === currentUniversityKey) {
+                    button.classList.add('selected'); // Thêm class 'selected' nếu là trường hiện tại
+                }
+
+                button.addEventListener('click', () => {
+                    setUniversity(key);
+                });
+
+                li.appendChild(button);
+                schoolList.appendChild(li);
+            }
+        });
+
+        if (!hasResults) {
+            schoolList.innerHTML = `<li><span class="no-result">Không tìm thấy trường...</span></li>`;
+        }
+    };
+
+    /**
+     * HÀM MỚI: Tải trường đã lưu từ Local Storage
+     */
+    const loadSavedUniversity = () => {
+        const savedKey = localStorage.getItem('selectedUniversity');
+        if (savedKey && universities[savedKey]) {
+            setUniversity(savedKey);
+        } else {
+            setUniversity('eiu'); // Mặc định là EIU
+        }
+        // Tải danh sách lần đầu
+        populateSchoolList();
     };
 
     // --- Hàm lưu dữ liệu vào Local Storage ---
@@ -132,7 +252,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Hàm reset về trạng thái mặc định ---
     const resetToDefault = () => {
+
         localStorage.removeItem('gradeCalculatorData'); // Xóa dữ liệu đã lưu
+        loadSavedUniversity(); // Tải trường ĐH đã lưu (hàm này sẽ tự gọi populateSchoolList)
         loadDataFromLocalStorage(); // Tải lại (sẽ ra mặc định)
         resultDiv.classList.add('hidden'); // Ẩn kết quả
     };
@@ -214,6 +336,33 @@ document.addEventListener('DOMContentLoaded', function () {
         validateFormInputs(); // Cập nhật trạng thái nút Tính toán
         saveDataToLocalStorage(); // Lưu lại mỗi khi người dùng nhập liệu
     });
+    // --- SỰ KIỆN MỚI CHO BỘ CHỌN TRƯỜNG ---
+    schoolSelectorBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Ngăn sự kiện click lan ra document
+        schoolDropdown.classList.toggle('hidden');
+        if (!schoolDropdown.classList.contains('hidden')) {
+            // Tải lại danh sách khi mở (để xóa filter cũ)
+            populateSchoolList(); 
+            schoolSearchInput.value = ''; // Xóa nội dung tìm kiếm cũ
+            schoolSearchInput.focus();
+        }
+    });
+
+    schoolSearchInput.addEventListener('input', () => {
+        populateSchoolList(schoolSearchInput.value);
+    });
+
+    // Ngăn việc click vào input tìm kiếm làm đóng dropdown
+    schoolSearchInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener('click', (e) => {
+        if (!schoolDropdown.classList.contains('hidden')) {
+            schoolDropdown.classList.add('hidden');
+        }
+    });
 
     // --- Sự kiện submit form ---
     gradeForm.addEventListener('submit', function (event) {
@@ -251,6 +400,127 @@ document.addEventListener('DOMContentLoaded', function () {
             resultDiv.classList.add('hidden');
             return;
         }
+        // === CÁC HÀM TÍNH TOÁN RIÊNG BIỆT ===
+
+    /**
+     * HÀM TÍNH TOÁN: Quy chế của EIU (Hệ 100)
+     * @param {object} inputs - { totalWeightedScore, finalExamScore, totalWeight }
+     * @returns {object} - { finalScore, letterGrade, ... }
+     */
+    const calculateGrade_EIU = (inputs) => {
+        const { totalWeightedScore, finalExamScore, totalWeight } = inputs;
+        
+        // EIU dùng hệ 100
+        const finalScore = parseFloat(totalWeightedScore.toFixed(2));
+        let letterGrade, classification, status, statusClass, score4, note = '';
+        let isFailed = false;
+
+        if (totalWeight < 100) {
+            note = `Lưu ý: Tổng trọng số hiện tại là ${totalWeight}%, không phải 100%.`;
+        }
+
+        // Quy chế điểm liệt của EIU: Điểm cuối kỳ (hệ 100) < 10.0
+        if (finalExamScore !== null && finalExamScore < 10.0) {
+            isFailed = true;
+            note += (note ? '<br>' : '') + 'Nợ môn do điểm thi kết thúc học phần dưới 10.0';
+        }
+
+        // Thang điểm EIU
+        if (finalScore >= 85) { letterGrade = 'A'; score4 = 4.0; classification = 'Giỏi'; } 
+        else if (finalScore >= 80) { letterGrade = 'A-'; score4 = 3.7; classification = 'Giỏi'; } 
+        else if (finalScore >= 75) { letterGrade = 'B+'; score4 = 3.3; classification = 'Khá'; } 
+        else if (finalScore >= 70) { letterGrade = 'B'; score4 = 3.0; classification = 'Khá'; } 
+        else if (finalScore >= 65) { letterGrade = 'B-'; score4 = 2.7; classification = 'Khá'; } 
+        else if (finalScore >= 60) { letterGrade = 'C+'; score4 = 2.3; classification = 'Trung bình'; } 
+        else if (finalScore >= 55) { letterGrade = 'C'; score4 = 2.0; classification = 'Trung bình'; } 
+        else if (finalScore >= 50) { letterGrade = 'C-'; score4 = 1.7; classification = 'Trung bình yếu'; } 
+        else if (finalScore >= 45) { letterGrade = 'D+'; score4 = 1.3; classification = 'Trung bình yếu'; } 
+        else if (finalScore >= 40) { letterGrade = 'D'; score4 = 1.0; classification = 'Trung bình yếu'; } 
+        else { letterGrade = 'F'; score4 = 0.0; classification = 'Kém'; }
+
+        if (isFailed || finalScore < 40.0) {
+            letterGrade = 'F'; score4 = 0.0; classification = 'Kém';
+            status = 'Nợ môn'; statusClass = 'bg-red-600 text-white';
+        } else {
+            status = 'Qua môn'; statusClass = 'bg-green-600 text-white';
+        }
+
+        // Trả về điểm hệ 100
+        return { finalScore, letterGrade, score4, classification, status, statusClass, note, isFailed };
+    };
+
+    /**
+     * HÀM TÍNH TOÁN: Quy chế của UIT (Ví dụ - Hệ 10)
+     * @param {object} inputs - { totalWeightedScore, finalExamScore, totalWeight }
+     * @returns {object} - { finalScore, letterGrade, ... }
+     */
+    const calculateGrade_UIT = (inputs) => {
+        const { totalWeightedScore, finalExamScore, totalWeight } = inputs;
+        
+        // UIT dùng thang 10, nên ta chia 10
+        // (totalWeightedScore vẫn là điểm hệ 100, ví dụ: 85)
+        const finalScore10 = parseFloat(totalWeightedScore.toFixed(2)) / 10;
+        
+        let letterGrade, classification, status, statusClass, score4, note = '';
+        let isFailed = false;
+
+        if (totalWeight < 100) {
+            note = `Lưu ý: Tổng trọng số hiện tại là ${totalWeight}%, không phải 100%.`;
+        }
+
+        // Quy chế điểm liệt của UIT (ví dụ: điểm cuối kỳ < 3.0 hệ 10)
+        // finalExamScore (hệ 100) < 30.0
+        if (finalExamScore !== null && finalExamScore < 30.0) { 
+            isFailed = true;
+            note += (note ? '<br>' : '') + 'Nợ môn do điểm thi cuối kỳ dưới 3.0 (hệ 10)';
+        }
+
+        // Thang điểm 10 của UIT (ví dụ)
+        if (finalScore10 >= 8.5) { letterGrade = 'A'; score4 = 4.0; classification = 'Giỏi'; }
+        else if (finalScore10 >= 8.0) { letterGrade = 'A-'; score4 = 3.7; classification = 'Giỏi'; } // UIT có thể không có A-
+        else if (finalScore10 >= 7.0) { letterGrade = 'B+'; score4 = 3.3; classification = 'Khá'; }
+        else if (finalScore10 >= 6.5) { letterGrade = 'B'; score4 = 3.0; classification = 'Khá'; }
+        else if (finalScore10 >= 5.5) { letterGrade = 'C+'; score4 = 2.3; classification = 'Trung bình'; }
+        else if (finalScore10 >= 5.0) { letterGrade = 'C'; score4 = 2.0; classification = 'Trung bình'; }
+        else if (finalScore10 >= 4.0) { letterGrade = 'D'; score4 = 1.0; classification = 'Trung bình yếu'; }
+        else { letterGrade = 'F'; score4 = 0.0; classification = 'Kém'; }
+
+        if (isFailed || finalScore10 < 4.0) {
+            letterGrade = 'F'; score4 = 0.0; classification = 'Kém';
+            status = 'Nợ môn'; statusClass = 'bg-red-600 text-white';
+        } else {
+            status = 'Qua môn'; statusClass = 'bg-green-600 text-white';
+        }
+        
+        note += (note ? '<br>' : '') + 'Kết quả được tính theo thang điểm 10 (UIT).';
+
+        // Trả về điểm hệ 10
+        return { finalScore: finalScore10, // Hiển thị điểm hệ 10
+                 letterGrade, score4, classification, status, statusClass, note, isFailed };
+    };
+
+    /**
+     * HÀM TÍNH TOÁN: Quy chế của BDU (Ví dụ)
+     * @param {object} inputs - { totalWeightedScore, finalExamScore, totalWeight }
+     * @returns {object} - { finalScore, letterGrade, ... }
+     */
+    const calculateGrade_BDU = (inputs) => {
+         // Giả sử BDU giống hệt EIU cho mục đích demo
+         // Bạn có thể sao chép và chỉnh sửa thang điểm của BDU tại đây
+         let result = calculateGrade_EIU(inputs);
+         result.note = 'Áp dụng quy chế tính điểm BDU (Demo).' + (result.note ? `<br>${result.note}` : '');
+         return result;
+    };
+
+
+    // === BỘ ĐIỀU HƯỚNG TÍNH TOÁN (MỚI) ===
+    const gradingAlgorithms = {
+        'eiu': calculateGrade_EIU,
+        'uit': calculateGrade_UIT,
+        'bdu': calculateGrade_BDU
+        // Thêm các hàm tính toán cho các trường khác ở đây
+        // 'hcmut': calculateGrade_HCMUT
+    };
 
         const finalScore = parseFloat(totalWeightedScore.toFixed(2));
         let letterGrade, classification, status, statusClass, score4, note = '';
