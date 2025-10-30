@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
             name: 'ĐH Quốc Tế Miền Đông (EIU)',
             shortName: 'EIU',
             aaoUrl: 'https://aao.eiu.edu.vn/#/home',
-            aaoText: "EIU's AAO"
+            aaoText: "EIU's Portal"
         },
         'uit': {
             name: 'ĐH Công Nghệ Thông Tin (UIT-VNU)',
@@ -37,11 +37,25 @@ document.addEventListener('DOMContentLoaded', function () {
         'bdu': {
             name: 'ĐH Bình Dương (BDU)',
             shortName: 'BDU',
-            aaoUrl: 'http://sinhvien.bdu.edu.vn/',
+            aaoUrl: 'https://sv.bdu.edu.vn/#/home',
             aaoText: "BDU's Portal"
-        }
+        },
         // Thêm các trường khác ở đây với key duy nhất
-        // 'hcmut': { name: 'ĐH Bách Khoa (HCMUT)', shortName: 'HCMUT', ... }
+        'hcmut': {
+            name: 'ĐH Bách Khoa (HCMUT)',
+            shortName: 'HCMUT',
+            aaoUrl: 'https://aao.hcmut.edu.vn/',
+            aaoText: "HCMUT's Portal"
+        },
+        'huflit': {
+            name: 'ĐH Ngoại Ngữ - Tin Học TP.HCM (HUFLIT)',
+            shortName: 'HUFLIT',
+            aaoUrl: 'https://portal.huflit.edu.vn/',
+            aaoText: "HUFLIT's Portal"
+        }
+
+
+
     };
     
     // Biến toàn cục để lưu trường đang chọn
@@ -104,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         resultDiv.classList.add('hidden');
         
         // Bạn có thể thêm 1 thông báo nhỏ ở đây
-        // showCustomAlert(`Đã chuyển sang quy tắc tính điểm của ${uni.name}.`);
+        showCustomAlert(`Đã chuyển sang quy tắc tính điểm của ${uni.name}.`);
     };
 
     /**
@@ -512,64 +526,173 @@ document.addEventListener('DOMContentLoaded', function () {
          return result;
     };
 
+    /**
+     * HÀM TÍNH TOÁN: Quy chế của HUFLIT (ĐH Ngoại Ngữ - Tin Học TP.HCM)
+     * @param {object} inputs - { totalWeightedScore, finalExamScore, totalWeight }
+     * @returns {object} - { finalScore, letterGrade, ... }
+     */
+    const calculateGrade_HUFLIT = (inputs) => {
+        const { totalWeightedScore, totalWeight } = inputs;
+        
+        // HUFLIT dùng thang điểm 10.
+        // "điểm tổng kết học phần được làm tròn đến 0.1"
+        const finalScore10_raw = totalWeightedScore / 10;
+        const finalScore10 = Math.round(finalScore10_raw * 10) / 10;
 
-    // === BỘ ĐIỀU HƯỚNG TÍNH TOÁN (MỚI) ===
-    const gradingAlgorithms = {
-        'eiu': calculateGrade_EIU,
-        'uit': calculateGrade_UIT,
-        'bdu': calculateGrade_BDU
-        // Thêm các hàm tính toán cho các trường khác ở đây
-        // 'hcmut': calculateGrade_HCMUT
-    };
-
-        const finalScore = parseFloat(totalWeightedScore.toFixed(2));
         let letterGrade, classification, status, statusClass, score4, note = '';
         let isFailed = false;
 
-        const noteEl = document.getElementById('note');
-        noteEl.className = 'text-center font-medium mt-4 text-sm'; // Reset class
         if (totalWeight < 100) {
             note = `Lưu ý: Tổng trọng số hiện tại là ${totalWeight}%, không phải 100%.`;
-            noteEl.classList.add('text-orange-600', 'dark:text-orange-400');
         }
 
-        if (finalExamScore !== null && finalExamScore < 10.0) {
-            isFailed = true;
-            note += (note ? '<br>' : '') + 'Nợ môn do điểm thi kết thúc học phần dưới 10.0';
-        }
-
-        if (isFailed) {
-            noteEl.classList.add('text-red-600', 'dark:text-red-400');
-        }
-
-        if (finalScore >= 85) { letterGrade = 'A'; score4 = 4.0; classification = 'Giỏi'; } 
-        else if (finalScore >= 80) { letterGrade = 'A-'; score4 = 3.7; classification = 'Giỏi'; } 
-        else if (finalScore >= 75) { letterGrade = 'B+'; score4 = 3.3; classification = 'Khá'; } 
-        else if (finalScore >= 70) { letterGrade = 'B'; score4 = 3.0; classification = 'Khá'; } 
-        else if (finalScore >= 65) { letterGrade = 'B-'; score4 = 2.7; classification = 'Khá'; } 
-        else if (finalScore >= 60) { letterGrade = 'C+'; score4 = 2.3; classification = 'Trung bình'; } 
-        else if (finalScore >= 55) { letterGrade = 'C'; score4 = 2.0; classification = 'Trung bình'; } 
-        else if (finalScore >= 50) { letterGrade = 'C-'; score4 = 1.7; classification = 'Trung bình yếu'; } 
-        else if (finalScore >= 45) { letterGrade = 'D+'; score4 = 1.3; classification = 'Trung bình yếu'; } 
-        else if (finalScore >= 40) { letterGrade = 'D'; score4 = 1.0; classification = 'Trung bình yếu'; } 
-        else { letterGrade = 'F'; score4 = 0.0; classification = 'Kém'; }
-
-        if (isFailed || finalScore < 40.0) {
-            letterGrade = 'F'; score4 = 0.0; classification = 'Kém';
-            status = 'Nợ môn'; statusClass = 'bg-red-600 text-white';
+        // --- Chuyển điểm hệ 10 sang điểm chữ ---
+        // Dựa trên portal HUFLIT và giả định lấp đầy khoảng trống (6.0-6.9 là C+)
+        if (finalScore10 >= 9.0) {
+            letterGrade = 'A+'; // (9.0 - 10)
+        } else if (finalScore10 >= 8.5) {
+            letterGrade = 'A'; // (8.5 - 8.9)
+        } else if (finalScore10 >= 8.0) {
+            letterGrade = 'B+'; // (8.0 - 8.4)
+        } else if (finalScore10 >= 7.0) {
+            letterGrade = 'B'; // (7.0 - 7.9)
+        } else if (finalScore10 >= 6.0) { 
+            letterGrade = 'C+'; // (6.0 - 6.9) -> *GIẢ ĐỊNH* dựa trên khoảng trống giữa B (7.0) và C (5.5)
+        } else if (finalScore10 >= 5.5) {
+            letterGrade = 'C'; // (5.5 - 5.9)
+        } else if (finalScore10 >= 5.0) {
+            letterGrade = 'D+'; // (5.0 - 5.4)
+        } else if (finalScore10 >= 4.0) {
+            letterGrade = 'D'; // (4.0 - 4.9)
         } else {
-            status = 'Qua môn'; statusClass = 'bg-green-600 text-white';
+            letterGrade = 'F'; // (< 4.0)
+            isFailed = true;
         }
 
+        // --- Chuyển điểm chữ sang hệ 4 ---
+        switch (letterGrade) {
+            case 'A+': score4 = 4.0; break;
+            case 'B+': score4 = 3.5; break;
+            case 'B':  score4 = 3.0; break;
+            case 'C+': score4 = 2.5; break;
+            case 'C':  score4 = 2.0; break;
+            case 'D+': score4 = 1.5; break;
+            case 'D':  score4 = 1.0; break;
+            case 'F':  score4 = 0.0; break;
+            case 'A':  
+                score4 = 0.0; // Điểm 'A' không được quy định trong portal HUFLIT
+                note += (note ? '<br>' : '') + 'Lưu ý: Điểm "A" (8.5-8.9) không được quy định trong thang điểm 4 (theo portal HUFLIT) và có thể không được tính vào GPA.';
+                break;
+            default: score4 = 0.0;
+        }
+
+        // --- Xếp loại ---
+        // (Xếp loại theo điểm hệ 4)
+        if (score4 >= 3.6) {
+            classification = 'Xuất sắc';
+        } else if (score4 >= 3.2) {
+            classification = 'Giỏi';
+        } else if (score4 >= 2.5) {
+            classification = 'Khá';
+        } else if (score4 >= 2.0) {
+            classification = 'Trung bình';
+        } else if (score4 >= 1.0) {
+            classification = 'Yếu';
+        } else {
+            classification = 'Kém';
+        }
+
+        // --- Trạng thái cuối cùng ---
+        // F là dưới 4.0
+        if (isFailed) {
+            status = 'Nợ môn'; 
+            statusClass = 'bg-red-600 text-white';
+            classification = 'Kém';
+            score4 = 0.0;
+            letterGrade = 'F';
+        } else {
+            status = 'Qua môn'; 
+            statusClass = 'bg-green-600 text-white';
+        }
+        
+        note += (note ? '<br>' : '') + 'Kết quả được tính theo thang điểm 10 (làm tròn 1 chữ số thập phân).';
+
+        // Trả về điểm hệ 10
+        return { 
+            finalScore: finalScore10, // Hiển thị điểm hệ 10
+            letterGrade, 
+            score4: score4.toFixed(1), // Hiển thị hệ 4 (làm tròn 1 CSDP cho nhất quán)
+            classification, 
+            status, 
+            statusClass, 
+            note, 
+            isFailed 
+        };
+    };
+
+
+// === BỘ ĐIỀU HƯỚNG TÍNH TOÁN (MỚI) ===
+        const gradingAlgorithms = {
+            'eiu': calculateGrade_EIU,
+            'uit': calculateGrade_UIT,
+            'bdu': calculateGrade_BDU,
+            'huflit': calculateGrade_HUFLIT, 
+            // Thêm các hàm tính toán cho các trường khác ở đây
+            // 'hcmut': calculateGrade_HCMUT
+        };
+
+        // Lấy hàm tính toán dựa trên trường đang chọn (currentUniversityKey)
+        const calculateGrade = gradingAlgorithms[currentUniversityKey] || calculateGrade_EIU; // Mặc định về EIU nếu không tìm thấy
+
+        // Chuẩn bị dữ liệu đầu vào
+        const inputs = {
+            totalWeightedScore,
+            finalExamScore,
+            totalWeight
+        };
+
+        // Gọi hàm tính toán
+        const result = calculateGrade(inputs);
+
+        // === CẬP NHẬT UI (DÙNG KẾT QUẢ TỪ `result` object) ===
+        
+        // Cập nhật GHI CHÚ (NOTE) trước
+        const noteEl = document.getElementById('note');
+        noteEl.className = 'text-center font-medium mt-4 text-sm'; // Reset class
+        noteEl.innerHTML = result.note || ''; // Lấy ghi chú từ object
+        
+        // Thêm class màu dựa trên trạng thái
+        if (result.isFailed) {
+            noteEl.classList.add('text-red-600', 'dark:text-red-400');
+        } else if (totalWeight < 100) {
+            noteEl.classList.add('text-orange-600', 'dark:text-orange-400');
+        } else if (!noteEl.innerHTML) {
+             // Nếu không có lỗi gì, thêm một ghi chú mặc định
+            noteEl.innerHTML = `Quy tắc tính điểm của ${universities[currentUniversityKey].shortName} đã được áp dụng.`;
+            noteEl.classList.add('text-slate-500', 'dark:text-slate-400');
+        }
+
+        // Cập nhật các trường kết quả
         document.getElementById('total-weight').textContent = `${totalWeight}%`;
-        document.getElementById('final-score').textContent = finalScore.toFixed(2);
-        document.getElementById('score-4').textContent = score4.toFixed(2);
-        document.getElementById('letter-grade').textContent = letterGrade;
-        document.getElementById('classification').textContent = classification;
+        
+        // Cập nhật tiêu đề điểm (một số trường dùng hệ 10)
+        const finalScoreLabel = document.getElementById('final-score-label'); // Lấy ID đã thêm ở Bước 1
+        if (currentUniversityKey === 'uit' || currentUniversityKey === 'huflit') {
+            finalScoreLabel.textContent = 'Điểm tổng kết (hệ 10):';
+            document.getElementById('final-score').textContent = result.finalScore.toFixed(1); // Hệ 10 làm tròn 1 CSDP
+        } else {
+            finalScoreLabel.textContent = 'Điểm tổng kết (hệ 100):';
+            document.getElementById('final-score').textContent = result.finalScore.toFixed(2); // Hệ 100 làm tròn 2 CSDP
+        }
+        
+        document.getElementById('score-4').textContent = result.score4;
+        document.getElementById('letter-grade').textContent = result.letterGrade;
+        document.getElementById('classification').textContent = result.classification;
+        
         const statusEl = document.getElementById('status');
-        statusEl.textContent = status;
-        statusEl.className = `font-bold text-xl px-4 py-1.5 rounded-full ${statusClass}`;
-        noteEl.innerHTML = note;
+        statusEl.textContent = result.status;
+        statusEl.className = `font-bold text-xl px-4 py-1.5 rounded-full ${result.statusClass}`;
+        
         resultDiv.classList.remove('hidden');
     });
 
