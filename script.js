@@ -855,6 +855,161 @@ document.addEventListener('DOMContentLoaded', function () {
     applyInitialTheme();
 });
 
+// === LOGIC MỚI CHO CHUYỂN TAB ===
+    const tabBtnCourse = document.getElementById('tab-btn-course');
+    const tabBtnGpa = document.getElementById('tab-btn-gpa');
+    const tabContentCourse = document.getElementById('tab-content-course');
+    const tabContentGpa = document.getElementById('tab-content-gpa');
+
+    tabBtnCourse.addEventListener('click', () => {
+        tabBtnCourse.classList.add('active-tab');
+        tabBtnGpa.classList.remove('active-tab');
+        tabContentCourse.classList.remove('hidden');
+        tabContentGpa.classList.add('hidden');
+    });
+
+    tabBtnGpa.addEventListener('click', () => {
+        tabBtnGpa.classList.add('active-tab');
+        tabBtnCourse.classList.remove('active-tab');
+        tabContentGpa.classList.remove('hidden');
+        tabContentCourse.classList.add('hidden');
+    });
+
+    // === LOGIC MỚI CHO TÍNH GPA ===
+    const gpaForm = document.getElementById('gpa-form');
+    const subjectsContainer = document.getElementById('subjects-container');
+    const addSubjectBtn = document.getElementById('add-subject-btn');
+    const gpaResultDiv = document.getElementById('gpa-result');
+
+    // --- Hàm tạo một hàng môn học ---
+    const createSubjectRow = (name = '', grade = '', credits = '') => {
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-12 gap-2 md:gap-4 items-center subject-row p-1.5 rounded-lg';
+        row.innerHTML = `
+            <div class="col-span-6">
+                <input type="text" class="form-input w-full bg-slate-100 border-transparent rounded-md focus:ring-2 focus:ring-teal-500 focus:bg-white focus:border-teal-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="VD: Lập trình C" value="${name}">
+            </div>
+            <div class="col-span-2">
+                <input type="number" class="form-input subject-grade w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-teal-500 focus:bg-white focus:border-teal-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="4.0" min="0" max="4" step="0.1" value="${grade}" required>
+            </div>
+            <div class="col-span-2">
+                <input type="number" class="form-input subject-credits w-full bg-slate-100 border-transparent rounded-md text-center focus:ring-2 focus:ring-teal-500 focus:bg-white focus:border-teal-500 dark:bg-slate-700 dark:border-slate-600 dark:focus:bg-slate-600 dark:text-slate-100" placeholder="3" min="0" max="10" step="1" value="${credits}" required>
+            </div>
+            <div class="col-span-2 flex justify-center">
+                <button type="button" class="remove-subject-btn text-slate-400 hover:text-red-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>`;
+        subjectsContainer.appendChild(row);
+    };
+
+    // --- Lưu/Tải dữ liệu GPA (tương tự như cũ) ---
+    const saveGpaData = () => {
+        const rows = subjectsContainer.querySelectorAll('.subject-row');
+        const data = [];
+        rows.forEach(row => {
+            data.push({
+                name: row.querySelector('input[type="text"]').value,
+                grade: row.querySelector('.subject-grade').value,
+                credits: row.querySelector('.subject-credits').value
+            });
+        });
+        localStorage.setItem('gpaCalculatorData', JSON.stringify(data));
+    };
+
+    const loadGpaData = () => {
+        const savedData = localStorage.getItem('gpaCalculatorData');
+        subjectsContainer.innerHTML = ''; // Xóa hàng cũ
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            if (data.length > 0) {
+                data.forEach(item => createSubjectRow(item.name, item.grade, item.credits));
+            } else {
+                createSubjectRow(); // Tạo 1 hàng trống nếu lưu rỗng
+            }
+        } else {
+            createSubjectRow(); // Tạo 1 hàng trống nếu chưa lưu
+        }
+    };
+
+    // --- Gán sự kiện cho GPA form ---
+    addSubjectBtn.addEventListener('click', () => {
+        createSubjectRow();
+        saveGpaData();
+    });
+
+    subjectsContainer.addEventListener('click', (e) => {
+        if (e.target.closest('.remove-subject-btn')) {
+            e.target.closest('.subject-row').remove();
+            saveGpaData();
+        }
+    });
+
+    subjectsContainer.addEventListener('input', saveGpaData);
+
+    gpaForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let totalPoints = 0;
+        let totalCredits = 0;
+        let hasError = false;
+
+        const rows = subjectsContainer.querySelectorAll('.subject-row');
+        if (rows.length === 0) {
+            showCustomAlert('Bạn cần thêm ít nhất một môn học để tính GPA.');
+            return;
+        }
+
+        rows.forEach(row => {
+            const grade = parseFloat(row.querySelector('.subject-grade').value);
+            const credits = parseInt(row.querySelector('.subject-credits').value);
+
+            if (isNaN(grade) || isNaN(credits) || grade < 0 || credits <= 0) {
+                // Chỉ tính các hàng có đủ thông tin hợp lệ
+                if (isNaN(grade) && isNaN(credits)) return; // Bỏ qua hàng trống
+                hasError = true;
+            } else {
+                totalPoints += grade * credits;
+                totalCredits += credits;
+            }
+        });
+
+        if (totalCredits === 0 && hasError) {
+             showCustomAlert('Vui lòng nhập điểm hệ 4 và số tín chỉ hợp lệ (lớn hơn 0) cho ít nhất một môn học.');
+             gpaResultDiv.classList.add('hidden');
+             return;
+        }
+
+        const finalGpa = (totalCredits > 0) ? (totalPoints / totalCredits) : 0;
+        let classification = '';
+
+        // Phân loại GPA (Bạn có thể tùy chỉnh thang điểm này)
+        if (finalGpa >= 3.6) classification = 'Xuất sắc';
+        else if (finalGpa >= 3.2) classification = 'Giỏi';
+        else if (finalGpa >= 2.5) classification = 'Khá';
+        else if (finalGpa >= 2.0) classification = 'Trung bình';
+        else if (finalGpa >= 1.0) classification = 'Trung bình yếu';
+        else classification = 'Kém';
+
+        // Hiển thị kết quả
+        document.getElementById('gpa-total-credits').textContent = totalCredits;
+        document.getElementById('gpa-final').textContent = finalGpa.toFixed(2);
+        document.getElementById('gpa-classification').textContent = classification;
+
+        const noteEl = document.getElementById('gpa-note');
+        if(hasError) {
+            noteEl.textContent = 'Một số hàng bị bỏ qua do thiếu thông tin hoặc thông tin không hợp lệ.';
+            noteEl.className = 'text-center font-medium mt-4 text-sm text-orange-600 dark:text-orange-400';
+        } else {
+            noteEl.textContent = 'Đã tính toán thành công.';
+            noteEl.className = 'text-center font-medium mt-4 text-sm text-slate-500 dark:text-slate-400';
+        }
+        
+        gpaResultDiv.classList.remove('hidden');
+    });
+
+    // --- Tải dữ liệu GPA khi load trang ---
+    loadGpaData();
+    
 // === LOGIC FIREBASE (GIỮ NGUYÊN) ===
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof firebase === 'undefined') {

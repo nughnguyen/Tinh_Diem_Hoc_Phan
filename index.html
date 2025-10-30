@@ -146,12 +146,9 @@
           <span class="left-front"></span>
           <span class="right-front"></span>
         </div>
-
         <span class="sun sunshine"></span>
         <span class="sun"></span>
-
         <div class="moon"></div>
-
         <div class="cloud back">
           <span class="left-back"></span>
           <span class="right-back"></span>
@@ -159,20 +156,35 @@
       </div>
 
       <div
-        class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6 md:p-10 transition-colors duration-300">
+        class="w-full max-w-3xl bg-white dark:bg-slate-800 rounded-2xl shadow-xl transition-colors duration-300 overflow-hidden">
 
-        <div class="text-center mb-8">
-          <h1 
-            class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-500 pb-2">
-            Công cụ tính điểm học phần
-          </h1>
-          <p class="text-slate-500 dark:text-slate-400 mt-2 transition-colors duration-300">Nhập các cột điểm và trọng
-            số (%) để xem kết quả chi tiết. <br> Hãy thay đổi nội dung cột điểm để phù hợp với môn học cần tính điểm.
-          </p>
+        <div>
+          <div class="flex border-b border-slate-200 dark:border-slate-700">
+            <button type="button" id="tab-btn-course"
+              class="tab-btn active-tab">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L9 9.617V15a1 1 0 102 0V9.617l6.394-2.697a1 1 0 000-1.84l-7-3zM9 11.383L3.06 8.69l6-2.539 6 2.539L9 11.383z"/></svg>
+              <span>Tính điểm Học phần</span>
+            </button>
+            <button type="button" id="tab-btn-gpa"
+              class="tab-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.393c-.843.07-1.18.974-.545 1.59l3.516 3.11-1.02 4.636c-.154.71.692 1.256 1.32.91l4.096-2.285 4.096 2.285c.628.346 1.474-.2 1.32-.91l-1.02-4.636 3.516-3.11c.635-.616.298-1.52-.545-1.59l-4.753-.393-1.83-4.401z" clip-rule="evenodd" /></svg>
+              <span>Tính GPA Học kỳ</span>
+            </button>
+          </div>
         </div>
+        <div id="tab-content-course" class="p-6 md:p-10">
+          <div class="text-center mb-8">
+            <h1
+              class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-500 pb-2">
+              Công cụ tính điểm học phần
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2 transition-colors duration-300">Nhập các cột điểm và trọng
+              số (%) để xem kết quả chi tiết. <br> Hãy thay đổi nội dung cột điểm để phù hợp với môn học cần tính điểm.
+            </p>
+          </div>
 
-        <form id="grade-form" class="space-y-4" novalidate>
-          <div
+          <form id="grade-form" class="space-y-4" novalidate>
+            <div
             class="grid grid-cols-12 gap-2 md:gap-4 items-center px-2 py-2 bg-slate-50 dark:bg-slate-700/50 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 transition-colors duration-300">
             <div class="col-span-5">Tên Cột Điểm</div>
             <div class="col-span-2 text-center flex items-center justify-center gap-1 relative has-tooltip">
@@ -247,10 +259,10 @@
             class="w-full bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-sky-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg shadow-blue-500/30">
             Tính toán Kết quả
           </button>
-        </form>
+          </form>
 
-        <div id="result" class="mt-10 hidden">
-          <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
+          <div id="result" class="mt-10 hidden">
+            <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
             <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-slate-200 mb-6">Kết quả Học tập Chi tiết
             </h2>
             <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6 space-y-4 text-base">
@@ -283,9 +295,72 @@
             </div>
             <p id="note" class="text-center font-medium mt-4 text-sm"></p>
           </div>
+          </div>
         </div>
+        <div id="tab-content-gpa" class="p-6 md:p-10 hidden">
+          <div class="text-center mb-8">
+            <h1
+              class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-cyan-500 pb-2">
+              Công cụ tính GPA Học kỳ
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2 transition-colors duration-300">
+              Thêm các môn học, nhập điểm hệ 4 (từ tab bên trái) và số tín chỉ của môn đó.
+            </p>
+          </div>
 
-      </div>
+          <form id="gpa-form" class="space-y-4" novalidate>
+            <div
+              class="grid grid-cols-12 gap-2 md:gap-4 items-center px-2 py-2 bg-slate-50 dark:bg-slate-700/50 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 transition-colors duration-300">
+              <div class="col-span-6">Tên Môn học (Không bắt buộc)</div>
+              <div class="col-span-2 text-center">Điểm hệ 4</div>
+              <div class="col-span-2 text-center">Số tín chỉ</div>
+              <div class="col-span-2"></div>
+            </div>
+
+            <div id="subjects-container" class="space-y-2">
+              </div>
+
+            <button type="button" id="add-subject-btn"
+              class="w-full text-teal-600 font-semibold py-2.5 px-4 rounded-lg border-2 border-dashed border-slate-300 hover:bg-slate-50 hover:border-teal-500 transition-all duration-300 flex items-center justify-center gap-2 dark:text-teal-400 dark:border-slate-600 dark:hover:bg-slate-700 dark:hover:border-teal-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              Thêm Môn học
+            </button>
+
+            <button type="submit"
+              class="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-bold py-3 px-4 rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-teal-300 shadow-lg shadow-teal-500/30">
+              Tính toán GPA
+            </button>
+          </form>
+
+          <div id="gpa-result" class="mt-10 hidden">
+            <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
+              <h2 class="text-2xl font-bold text-center text-slate-800 dark:text-slate-200 mb-6">Kết quả Học kỳ
+              </h2>
+              <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6 space-y-4 text-lg">
+                <div class="flex justify-between items-center">
+                  <span class="text-slate-600 dark:text-slate-400">Tổng số tín chỉ:</span>
+                  <span id="gpa-total-credits"
+                    class="font-bold text-slate-800 dark:text-slate-200"></span>
+                </div>
+                <div class="border-t border-slate-200 dark:border-slate-700 my-2"></div>
+                <div class="flex justify-between items-center pt-2">
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">GPA Học kỳ (hệ 4):</span>
+                  <span id="gpa-final" class="font-bold text-3xl text-teal-600 dark:text-teal-500"></span>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Xếp loại học kỳ:</span>
+                  <span id="gpa-classification" class="font-bold text-xl text-slate-800 dark:text-slate-200"></span>
+                </div>
+              </div>
+              <p id="gpa-note" class="text-center font-medium mt-4 text-sm text-slate-500 dark:text-slate-400"></p>
+            </div>
+          </div>
+        </div>
+        </div>
     </div>
   </main>
 
