@@ -146,9 +146,8 @@ const universities = {
 
     // *** LOGIC MỚI: Đổi thang điểm ***
     if (oldScale !== newScale) {
-        // Hiển thị thông báo và cập nhật các trường
-        showCustomAlert(`Đã chuyển sang thang điểm ${newScale} của ${uni.shortName}. Các ô điểm đã được xóa.`);
-        convertExistingInputFields(newScale);
+        // *** SỬA ĐỔI: Truyền cả thang điểm cũ và mới ***
+        convertExistingInputFields(oldScale, newScale);
     }
 };
 
@@ -191,57 +190,83 @@ const universities = {
 
     /**
      * HÀM MỚI: Tải trường đã lưu từ Local Storage
+     * Sửa lỗi F5 làm mất dữ liệu
      */
     const loadSavedUniversity = () => {
         const savedKey = localStorage.getItem('selectedUniversity');
+        
+        // 1. Chỉ CẬP NHẬT BIẾN TOÀN CỤC, không gọi setUniversity()
+        // Điều này đảm bảo thang điểm được đặt đúng trước khi tải dữ liệu
         if (savedKey && universities[savedKey]) {
-            setUniversity(savedKey);
+            currentUniversityKey = savedKey;
         } else {
-            setUniversity('eiu'); // Mặc định là EIU
+            currentUniversityKey = 'eiu'; // Mặc định là EIU
         }
-        // Tải danh sách lần đầu
+
+        // 2. Cập nhật UI tĩnh (tiêu đề, link, v.v.) dựa trên biến đã tải
+        const uni = universities[currentUniversityKey];
+        mainPageTitle.textContent = `Công cụ tính điểm ${uni.shortName}`;
+        currentSchoolNameBtn.textContent = uni.shortName;
+        schoolAaoLink.href = uni.aaoUrl;
+        schoolAaoLink.textContent = uni.aaoText;
+        pageTitle.textContent = `Công cụ tính điểm | ${uni.shortName}`;
+
+        // 3. Tải danh sách (để highlight đúng mục đã chọn)
         populateSchoolList();
     };
 
     /**
-     * HÀM MỚI: Cập nhật các trường input hiện có khi đổi thang điểm
+     * HÀM MỚI (ĐÃ SỬA): Cập nhật các trường input hiện có khi đổi thang điểm
+     * @param {number} oldScale - Thang điểm cũ (10 hoặc 100)
      * @param {number} newScale - Thang điểm mới (10 hoặc 100)
      */
-    const convertExistingInputFields = (newScale) => {
+    const convertExistingInputFields = (oldScale, newScale) => {
         const scoreTooltip = document.getElementById('score-tooltip-content');
         const scoreInputs = componentsContainer.querySelectorAll('.component-score');
         
         if (newScale === 10) {
-            // Cập nhật tooltip
+            // --- Chuyển sang Thang 10 ---
             if (scoreTooltip) {
                 scoreTooltip.innerHTML = 'Vui lòng nhập điểm theo <strong class="text-yellow-300">thang điểm 10</strong>. Ví dụ: 8.5, 7.8...';
             }
-            // Cập nhật các ô input
             scoreInputs.forEach(input => {
                 input.max = 10;
                 input.step = 0.1;
                 input.placeholder = "Hệ 10";
-                input.value = ''; // Xóa giá trị cũ để tránh lỗi
+                
+                // *** LOGIC CHUYỂN ĐỔI (KHÔNG XÓA) ***
+                const currentValue = parseFloat(input.value);
+                if (!isNaN(currentValue) && oldScale === 100) {
+                    // Chuyển 85.5 -> 8.55
+                    input.value = currentValue / 10;
+                }
             });
+
         } else { // Mặc định là thang 100
-            // Cập nhật tooltip
+            // --- Chuyển sang Thang 100 ---
             if (scoreTooltip) {
                 scoreTooltip.innerHTML = 'Vui lòng nhập điểm theo <strong class="text-yellow-300">thang điểm 100</strong>. Ví dụ: 85, 78...';
             }
-            // Cập nhật các ô input
             scoreInputs.forEach(input => {
                 input.max = 100;
                 input.step = 0.5;
                 input.placeholder = "Điểm";
-                input.value = ''; // Xóa giá trị cũ
+
+                // *** LOGIC CHUYỂN ĐỔI (KHÔNG XÓA) ***
+                const currentValue = parseFloat(input.value);
+                if (!isNaN(currentValue) && oldScale === 10) {
+                    // Chuyển 8.5 -> 85
+                    // Chuyển 8.55 -> 85.5
+                    input.value = currentValue * 10;
+                }
             });
         }
 
-        // Sau khi xóa, xác thực lại các hàng (để xóa thông báo lỗi)
+        // Xác thực lại các hàng (để xóa/hiện thông báo lỗi nếu cần)
         const allRows = componentsContainer.querySelectorAll('.component-row');
-        allRows.forEach(row => validateRow(row)); // validateRow sẽ xóa lỗi
+        allRows.forEach(row => validateRow(row));
         validateFormInputs(); // Cập nhật lại trạng thái nút
-        saveDataToLocalStorage(); // Lưu trạng thái đã xóa
+        saveDataToLocalStorage(); // Lưu trạng thái ĐÃ CHUYỂN ĐỔI
     };
 
     // --- Hàm lưu dữ liệu vào Local Storage ---
@@ -679,14 +704,14 @@ const calculateGrade_HUFLIT = (inputs) => {
         case 'D':  score4 = 1.0; break;
         case 'F':  score4 = 0.0; break;
         case 'A':  
-            score4 = 0.0; // Điểm 'A' không được quy định trong huflit2.jpg
-            note += (note ? '<br>' : '') + 'Lưu ý: Điểm chữ "A" (8.5-8.9) không được quy định trong thang điểm 4 (theo huflit2.jpg) và có thể không được tính vào GPA.';
+            score4 = 0.0; // Điểm 'A' không được quy định trong huflit portal
+            note += (note ? '<br>' : '') + 'Lưu ý: Điểm chữ "A" (8.5-8.9) không được quy định trong thang điểm 4 (theo huflit portal) và có thể không được tính vào GPA.';
             break;
         default: score4 = 0.0;
     }
 
     // --- Xếp loại ---
-    // Dựa trên huflit3.jpg (Xếp loại theo điểm hệ 4)
+    // Dựa trên huflit (Xếp loại theo điểm hệ 4)
     if (score4 >= 3.6) {
         classification = 'Xuất sắc';
     } else if (score4 >= 3.2) {
@@ -702,7 +727,7 @@ const calculateGrade_HUFLIT = (inputs) => {
     }
 
     // --- Trạng thái cuối cùng ---
-    // huflit1.jpg: F là dưới 4.0
+//F là dưới 4.0
     if (isFailed) {
         status = 'Nợ môn'; 
         statusClass = 'bg-red-600 text-white';
